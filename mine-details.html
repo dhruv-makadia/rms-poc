@@ -133,8 +133,12 @@
 
         <!-- ============ MACHINES ============ -->
         <section class="tab-panel" id="tab-machines">
-          <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
-            <button class="btn btn--primary btn--icon" id="mAdd" title="Add Machine"></button>
+          <div class="section-head" style="margin-top:0">
+            <h4>Machines</h4>
+            <span class="count-badge count-badge--soft" id="mCount">0</span>
+            <div class="section-head__actions">
+              <button class="btn btn--primary btn--icon" id="mAdd" title="Add Machine"></button>
+            </div>
           </div>
 
           <div class="table-wrap">
@@ -272,7 +276,7 @@ document.getElementById('peopleGrid').innerHTML = CONTACTS.map(c=>{
     <div class="person__top">
       <img class="person__photo" src="${c.photo}" alt="${esc(c.name)}"
            onerror="contactImgFallback(this,'${esc(ini)}')">
-      <div style="min-width:0">
+      <div class="person__info">
         <div class="person__name">${esc(c.name)}</div>
         <div class="person__title">${esc(c.title)}</div>
       </div>
@@ -461,6 +465,7 @@ function mRender(){
   document.getElementById('mFrom').textContent  = total ? from+1 : 0;
   document.getElementById('mTo').textContent    = from+slice.length;
   document.getElementById('mTotal').textContent = total;
+  document.getElementById('mCount').textContent = total;
 
   qsa('.tbl thead th.sortable').forEach(th=>{
     const on = th.dataset.k === mState.sort;
