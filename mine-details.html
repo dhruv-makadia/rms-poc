@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mine Details · RMS — Rosco Mining Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="backdrop"></div>
+
+  <aside class="sidebar">
+    <div class="sidebar__head">
+      <a class="logo" href="mines.html" id="sideLogo"></a>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-item is-active" href="mines.html"><img class="nav-item__img" src="assets/img/icon-mine.png" alt=""><span>Mines</span></a>
+    </nav>
+  </aside>
+
+  <div class="main">
+
+    <header class="topbar">
+      <button class="icon-btn" data-toggle-sidebar aria-label="Toggle navigation" id="btnMenu"></button>
+      <a class="logo topbar__logo" href="mines.html" id="topLogo"></a>
+      <div class="topbar__spacer"></div>
+      <div class="profile">
+        <button class="profile__btn" aria-label="Account">
+          <span class="avatar">AU</span>
+          <svg class="profile__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown">
+          <div class="dropdown__head">
+            <span class="avatar">AU</span>
+            <span><b>Admin User</b><span>admin@roscomining.com</span></span>
+          </div>
+          <button class="dropdown__item" data-i="user">My Profile</button>
+          <button class="dropdown__item" data-i="lock">Change Password</button>
+          <div class="dropdown__sep"></div>
+          <button class="dropdown__item dropdown__item--danger" data-i="logout" data-logout>Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="page__head">
+        <div>
+          <h1 class="page__title" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <span id="mineName">Mine</span>
+            <span class="pill pill--active" id="mineStatus">Active</span>
+          </h1>
+        </div>
+        <div class="page__actions">
+          <a class="btn btn--ghost" href="mines.html" data-i="back">Back</a>
+          <button class="btn btn--ghost" id="btnNotes" data-i="note">
+            Notes <span class="count-badge count-badge--soft" id="notesCount">0</span>
+          </button>
+          <button class="btn btn--primary" id="btnEdit" data-i="edit">Edit</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tabs" role="tablist">
+          <button class="tab is-active" data-tab="details" role="tab">Details</button>
+          <button class="tab" data-tab="fleets" role="tab">Fleets</button>
+          <button class="tab" data-tab="machines" role="tab">Machines</button>
+        </div>
+
+        <!-- ============ DETAILS ============ -->
+        <section class="tab-panel is-active" id="tab-details">
+
+          <!-- Overview: image + organisation -->
+          <div class="overview">
+            <div class="overview__media" id="mineMedia"></div>
+
+            <div>
+              <div class="org">
+                <div>
+                  <h3 id="orgName">—</h3>
+                  <p class="org__addr" id="orgAddr">—</p>
+                </div>
+                <div class="org__actions">
+                  <button class="icon-btn" title="Notes" id="btnNotes2"></button>
+                  <button class="icon-btn" title="Edit" id="btnEdit2"></button>
+                </div>
+              </div>
+
+              <div class="chip-row" id="factRow"></div>
+              <div class="link-row" id="linkRow"></div>
+              <div class="socials" style="margin-top:16px;margin-bottom:0" id="socials"></div>
+            </div>
+          </div>
+
+          <!-- Mine information -->
+          <div class="section-head" style="margin-top:0"><h4>Mine Information</h4></div>
+          <dl class="info-grid" id="infoGrid"></dl>
+
+          <!-- Contact persons -->
+          <div class="section-head">
+            <h4>Contact Persons</h4>
+            <span class="count-badge count-badge--soft" id="cpCount">0</span>
+            <div class="section-head__actions">
+              <button class="btn btn--primary btn--icon btn--sm" id="cpAdd" title="Add Contact"></button>
+            </div>
+          </div>
+          <div class="people-grid" id="peopleGrid"></div>
+        </section>
+
+        <!-- ============ FLEETS ============ -->
+        <section class="tab-panel" id="tab-fleets">
+          <p class="page__sub" style="margin:-4px 0 16px">
+            <b id="fleetTotal">0</b> machines across <b id="fleetTypes">0</b> equipment types ·
+            select a type or a model to list its machines
+          </p>
+
+          <div class="card" style="box-shadow:none;margin-bottom:22px">
+            <div class="card__head"><h4 class="card__title">Fleet composition by equipment type</h4></div>
+            <div class="card__body">
+              <div class="chart">
+                <div class="chart__plot" id="chartPlot"><div class="chart__grid" id="chartGrid"></div></div>
+                <div class="chart__labels" id="chartLabels"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fleet-grid" id="fleetGrid"></div>
+        </section>
+
+        <!-- ============ MACHINES ============ -->
+        <section class="tab-panel" id="tab-machines">
+          <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+            <button class="btn btn--primary btn--icon" id="mAdd" title="Add Machine"></button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th class="sortable" data-k="model">Model <span class="sort"></span></th>
+                  <th class="sortable" data-k="manufacturer">Manufacturer <span class="sort"></span></th>
+                  <th class="sortable" data-k="equipmentType">Equipment Type <span class="sort"></span></th>
+                  <th class="sortable" data-k="serial">Serial No <span class="sort"></span></th>
+                  <th class="sortable" data-k="quantity">Quantity <span class="sort"></span></th>
+                  <th class="sortable" data-k="size">Size <span class="sort"></span></th>
+                  <th class="sortable" data-k="status">Status <span class="sort"></span></th>
+                  <th style="text-align:right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="mBody"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <span>Showing <b id="mFrom">0</b>–<b id="mTo">0</b> of <b id="mTotal">0</b></span>
+            <select class="select" id="mSize" style="width:auto;height:34px">
+              <option value="10" selected>10 / page</option>
+              <option value="25">25 / page</option>
+              <option value="50">50 / page</option>
+            </select>
+            <div class="pagination__pages" id="mPages"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= Notes panel ================= -->
+<div class="drawer-scrim" id="scrim"></div>
+<aside class="drawer" id="notesDrawer" aria-label="Notes">
+  <div class="drawer__head">
+    <div>
+      <h3>Notes</h3>
+      <p style="font-size:12.5px;color:var(--muted)" id="notesFor">This mine</p>
+    </div>
+    <span class="count-badge count-badge--soft" id="notesCount2">0</span>
+    <button class="icon-btn" id="notesClose" style="margin-left:auto" aria-label="Close"></button>
+  </div>
+  <div class="drawer__body">
+    <div class="note-compose">
+      <label class="field__label" for="noteText" style="display:block;margin-bottom:7px">Add a note</label>
+      <textarea class="input" id="noteText" rows="3" placeholder="Write a note about this mine…"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <button class="btn btn--primary btn--sm" id="noteSave">Save Note</button>
+      </div>
+    </div>
+    <div id="noteList"></div>
+  </div>
+</aside>
+
+<aside class="drawer drawer--wide" id="fleetDrawer" aria-label="Machines">
+  <div class="drawer__head">
+    <div>
+      <h3 id="fleetTitle">—</h3>
+      <p style="font-size:12.5px;color:var(--muted)" id="fleetSub">—</p>
+    </div>
+    <button class="icon-btn" id="fleetClose" style="margin-left:auto" aria-label="Close"></button>
+  </div>
+  <div class="drawer__body" id="fleetBody" style="padding:0 20px 20px"></div>
+</aside>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.querySelectorAll('[data-i]').forEach(el=>el.insertAdjacentHTML('afterbegin', icon(el.dataset.i)));
+document.getElementById('btnMenu').innerHTML    = icon('menu');
+document.getElementById('btnNotes2').innerHTML  = icon('note');
+document.getElementById('btnEdit2').innerHTML   = icon('edit');
+document.getElementById('notesClose').innerHTML = icon('close');
+document.getElementById('fleetClose').innerHTML  = icon('close');
+document.getElementById('cpAdd').innerHTML      = icon('plus');
+document.getElementById('mAdd').innerHTML       = icon('plus');
+document.getElementById('sideLogo').innerHTML   = brandLogo();
+document.getElementById('topLogo').innerHTML    = brandLogo();
+
+const mine = MINES.find(m=>m.id === +param('id')) || MINES[0];
+document.title = mine.name + ' · RMS';
+document.getElementById('mineName').textContent = mine.name;
+const st = document.getElementById('mineStatus');
+st.textContent = mine.status;
+st.className = 'pill ' + (mine.status==='Active'?'pill--active':'pill--inactive');
+
+/* ---- Overview ---- */
+const media = document.getElementById('mineMedia');
+media.className = 'overview__media' + (mine.image ? ' overview__media--logo' : '');
+media.innerHTML = `<img src="${mine.image || mine.fallback}" alt="${esc(mine.name)}"
+                        onerror="heroImgFallback(this,'${mine.fallback}')">`;
+
+document.getElementById('orgName').textContent = mine.company;
+document.getElementById('orgAddr').textContent =
+  (mine.city && mine.city !== '—' && !mine.address.includes(mine.city))
+    ? mine.address + ', ' + mine.city
+    : mine.address;
+
+document.getElementById('factRow').innerHTML = [
+  ['box',    'Type',     mine.type],
+  ['layers', 'Mineral',  mine.mineral],
+  ['pin',    'Region',   mine.region],
+  ['shield', 'Owner',    mine.ownership]
+].filter(f=>f[2]).map(([ic,label,val])=>
+  `<span class="fact">${icon(ic)}${label} <b>${esc(val)}</b></span>`).join('');
+
+document.getElementById('linkRow').innerHTML = `
+  <span>${icon('phone')}${esc(mine.phone)}</span>
+  <a href="#" onclick="return false">${icon('globe')}${esc(mine.web)}</a>
+  ${mine.email && mine.email!=='—' ? `<a href="#" onclick="return false">${icon('mail')}${esc(mine.email)}</a>` : ''}`;
+
+document.getElementById('socials').innerHTML = ['f','t','in']
+  .map(s=>`<a class="social" href="#" onclick="return false"><span style="font-size:11px;font-weight:800">${s}</span></a>`).join('');
+
+/* ---- Mine information grid ---- */
+const INFO = [
+  ['Mine Locations', mine.locations],['Type', mine.type],['Mineral(s)', mine.mineral],
+  ['Ownership', mine.ownership],['County', mine.county],['Postal', mine.postal],
+  ['Fax', mine.fax],['Region', mine.region],['Equipment Type', mine.equipType],
+  ['Key Contact Name', mine.contactName],['Key Contact Title', mine.contactTitle],['Status', mine.status]
+];
+document.getElementById('infoGrid').innerHTML = INFO.map(([k,v])=>`
+  <div class="info"><dt>${esc(k)}</dt>
+    <dd class="${v?'':'is-empty'}">${v?esc(v):'Not specified'}</dd></div>`).join('');
+
+/* ---- Contact persons ---- */
+document.getElementById('cpCount').textContent = CONTACTS.length;
+document.getElementById('peopleGrid').innerHTML = CONTACTS.map(c=>{
+  const ini = c.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  return `<article class="person">
+    <div class="person__top">
+      <img class="person__photo" src="${c.photo}" alt="${esc(c.name)}"
+           onerror="contactImgFallback(this,'${esc(ini)}')">
+      <div style="min-width:0">
+        <div class="person__name">${esc(c.name)}</div>
+        <div class="person__title">${esc(c.title)}</div>
+      </div>
+      <div class="person__actions">
+        <button class="icon-btn" title="LinkedIn" data-act="linkedin" data-name="${esc(c.name)}">${icon('linkedin')}</button>
+        <button class="icon-btn" title="CRM" data-act="crm" data-name="${esc(c.name)}">${icon('crm')}</button>
+        <button class="icon-btn" title="Notes" data-act="notes" data-name="${esc(c.name)}">${icon('note')}</button>
+        <button class="icon-btn" title="Edit" data-act="edit" data-name="${esc(c.name)}">${icon('edit')}</button>
+      </div>
+    </div>
+    <div class="person__rows">
+      <div>${icon('phone')}${esc(c.phone)}</div>
+      <div>${icon('mail')}${esc(c.email)}</div>
+      <div>${icon('clock')}Last Contact: ${esc(c.last)}</div>
+    </div>
+    <div class="person__tags">
+      ${c.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}
+    </div>
+  </article>`;
+}).join('');
+
+/* ---- Notes panel ---- */
+const notes = NOTES.slice();
+function renderNotes(){
+  document.getElementById('notesCount').textContent  = notes.length;
+  document.getElementById('notesCount2').textContent = notes.length;
+  document.getElementById('noteList').innerHTML = notes.length ? notes.map(n=>`
+    <div class="note-item">
+      <span class="avatar avatar--sm">${esc(n.initials)}</span>
+      <div class="note-item__body">
+        <div class="note-item__top">
+          <span class="note-item__author">${esc(n.author)}</span>
+          <span class="note-item__date">${esc(n.date)}</span>
+        </div>
+        <p class="note-item__text">${esc(n.text)}</p>
+      </div>
+    </div>`).join('')
+    : `<div class="empty">${icon('note')}<h4>No notes yet</h4><p>Add the first note for this mine.</p></div>`;
+}
+function openNotes(who){
+  document.getElementById('notesFor').textContent = who || mine.name;
+  document.getElementById('noteText').placeholder = who
+    ? 'Write a note about ' + who + '…'
+    : 'Write a note about this mine…';
+  document.getElementById('notesDrawer').classList.add('is-open');
+  document.getElementById('scrim').classList.add('is-open');
+}
+function closeNotes(){
+  document.getElementById('notesDrawer').classList.remove('is-open');
+  document.getElementById('scrim').classList.remove('is-open');
+}
+document.getElementById('btnNotes').addEventListener('click', ()=>openNotes());
+document.getElementById('btnNotes2').addEventListener('click', ()=>openNotes());
+document.getElementById('notesClose').addEventListener('click', closeNotes);
+document.getElementById('scrim').addEventListener('click', ()=>{ closeNotes(); closeFleet(); });
+document.getElementById('noteSave').addEventListener('click', ()=>{
+  const ta = document.getElementById('noteText');
+  const text = ta.value.trim();
+  if(!text){ ta.focus(); return; }
+  const d = new Date();
+  const stamp = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) +
+                ' · ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  notes.unshift({ author:CURRENT_USER.name, initials:CURRENT_USER.initials, date:stamp, text });
+  ta.value = '';
+  renderNotes();
+  toast('Note added');
+});
+renderNotes();
+
+const statusPill = s => s==='OPERATING' ? 'pill--soft-green'
+  : s==='STANDBY' ? 'pill--soft-warn' : 'pill--soft-red';
+
+/* ---- Fleets ---- */
+const totals = FLEET.map(g=>({type:g.type, n:g.models.reduce((a,m)=>a+m[2],0)}));
+document.getElementById('fleetTotal').textContent = totals.reduce((a,t)=>a+t.n,0);
+document.getElementById('fleetTypes').textContent = FLEET.length;
+
+/* bar chart of the type totals */
+const ceilV = Math.ceil(Math.max(...totals.map(t=>t.n))/100)*100;
+document.getElementById('chartGrid').innerHTML =
+  [0,.25,.5,.75,1].map(f=>`<i style="bottom:${f*100}%" data-v="${Math.round(ceilV*f)}"></i>`).join('');
+document.getElementById('chartPlot').insertAdjacentHTML('beforeend',
+  totals.map((t,i)=>`<button type="button" class="bar" data-type="${esc(t.type)}" title="List ${esc(t.type)} machines">
+      <div class="bar__fill" style="height:0;background:linear-gradient(180deg,${FLEET[i].color}AA,${FLEET[i].color})">
+        <span class="bar__val">${t.n}</span>
+      </div>
+    </button>`).join(''));
+document.getElementById('chartLabels').innerHTML =
+  totals.map(t=>`<div class="bar__label">${esc(t.type)}</div>`).join('');
+setTimeout(()=>qsa('.bar__fill').forEach((el,i)=> el.style.height = (totals[i].n/ceilV*100)+'%'), 120);
+
+document.getElementById('fleetGrid').innerHTML = FLEET.map((g,gi)=>{
+  const gTotal = g.models.reduce((a,m)=>a+m[2],0);
+  return `<div class="fleet-card">
+    <button type="button" class="fleet-card__head" data-type="${esc(g.type)}">
+      <span class="fleet-card__ico" style="background:${g.color}">${icon(g.icon)}</span>
+      <h5>${esc(g.type)}</h5>
+      <span class="count-badge" style="margin-left:auto;background:${g.color}">${gTotal}</span>
+      <span class="fleet-card__go">${icon('chevR')}</span>
+    </button>
+    <div class="fleet-card__list">
+      ${g.models.map(([model,make,n])=>`
+        <button type="button" class="fleet-row" data-type="${esc(g.type)}" data-model="${esc(model)}">
+          <span style="min-width:118px;text-align:left">
+            <span class="fleet-row__name">${esc(model)}</span><br>
+            <span class="fleet-row__make">${esc(make)}</span>
+          </span>
+          <span class="count-badge count-badge--soft" style="margin-left:auto">${n}</span>
+        </button>`).join('')}
+    </div>
+  </div>`;
+}).join('');
+
+/* ---- Machine list drawer (opened from a fleet type or model) ---- */
+function openFleet(type, model){
+  const rows = MACHINES.filter(m =>
+    m.equipmentType === type.toUpperCase() && (!model || m.model === model));
+
+  qs('#fleetTitle').textContent = model ? model : type;
+  qs('#fleetSub').textContent   = (model ? type + ' · ' : '') + rows.length + ' machines';
+
+  qs('#fleetBody').innerHTML = rows.length ? `
+    <div class="table-wrap" style="border:0">
+      <table class="tbl" style="min-width:0">
+        <thead><tr><th>Model</th><th>Manufacturer</th><th>Serial No</th><th>Size</th><th>Status</th></tr></thead>
+        <tbody>
+          ${rows.map(m=>`<tr>
+            <td class="cell-strong">${esc(m.model)}</td>
+            <td>${esc(m.manufacturer)}</td>
+            <td class="${m.serial?'':'cell-mute'}">${m.serial ? esc(m.serial) : '—'}</td>
+            <td>${m.size}</td>
+            <td><span class="pill ${statusPill(m.status)}">${esc(m.status)}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`
+    : `<div class="empty">${icon('cog')}<h4>No machines recorded</h4></div>`;
+
+  qs('#fleetDrawer').classList.add('is-open');
+  qs('#scrim').classList.add('is-open');
+}
+function closeFleet(){
+  qs('#fleetDrawer').classList.remove('is-open');
+  qs('#scrim').classList.remove('is-open');
+}
+qsa('#chartPlot .bar').forEach(b=>
+  b.addEventListener('click', ()=>openFleet(b.dataset.type)));
+qsa('#fleetGrid .fleet-card__head').forEach(b=>
+  b.addEventListener('click', ()=>openFleet(b.dataset.type)));
+qsa('#fleetGrid .fleet-row').forEach(b=>
+  b.addEventListener('click', ()=>openFleet(b.dataset.type, b.dataset.model)));
+qs('#fleetClose').addEventListener('click', closeFleet);
+
+/* ---- Machines ---- */
+const mState = { sort:'model', dir:1, page:1, size:10 };
+
+function mRender(){
+  const rows = [...MACHINES].sort((a,b)=>{
+    const A=a[mState.sort], B=b[mState.sort];
+    return (typeof A==='number' ? A-B : String(A).localeCompare(String(B))) * mState.dir;
+  });
+  const total = rows.length;
+  const pages = Math.max(1, Math.ceil(total/mState.size));
+  if(mState.page>pages) mState.page = pages;
+  const from  = (mState.page-1)*mState.size;
+  const slice = rows.slice(from, from+mState.size);
+
+  document.getElementById('mBody').innerHTML = slice.map(m=>`
+    <tr>
+      <td class="cell-strong">${esc(m.model)}</td>
+      <td>${esc(m.manufacturer)}</td>
+      <td>${esc(m.equipmentType)}</td>
+      <td class="${m.serial?'':'cell-mute'}">${esc(m.serial)}</td>
+      <td>${m.quantity}</td>
+      <td>${m.size}</td>
+      <td><span class="pill ${statusPill(m.status)}">${esc(m.status)}</span></td>
+      <td>
+        <div class="actions">
+          <button class="icon-btn" title="Edit">${icon('edit')}</button>
+          <button class="icon-btn" title="Duplicate">${icon('copy')}</button>
+          <button class="icon-btn icon-btn--danger" title="Delete">${icon('trash')}</button>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  document.getElementById('mFrom').textContent  = total ? from+1 : 0;
+  document.getElementById('mTo').textContent    = from+slice.length;
+  document.getElementById('mTotal').textContent = total;
+
+  qsa('.tbl thead th.sortable').forEach(th=>{
+    const on = th.dataset.k === mState.sort;
+    th.classList.toggle('is-sorted', on);
+    qs('.sort',th).innerHTML = icon(on ? (mState.dir===1?'sortAsc':'sortDesc') : 'sortNone');
+  });
+
+  renderPager(document.getElementById('mPages'), mState.page, pages, p=>{
+    mState.page = p; mRender();
+  });
+  qsa('#mBody .icon-btn').forEach(b=>b.addEventListener('click',()=>toast('POC: “'+b.title+'” action')));
+}
+document.getElementById('mSize').addEventListener('change', e=>{ mState.size=+e.target.value; mState.page=1; mRender(); });
+qsa('.tbl thead th.sortable').forEach(th=>th.addEventListener('click',()=>{
+  const k=th.dataset.k;
+  if(mState.sort===k) mState.dir *= -1; else { mState.sort=k; mState.dir=1; }
+  mRender();
+}));
+mRender();
+
+/* ---- Tabs ---- */
+qsa('.tab').forEach(t=>t.addEventListener('click',()=>{
+  qsa('.tab').forEach(x=>x.classList.remove('is-active'));
+  qsa('.tab-panel').forEach(x=>x.classList.remove('is-active'));
+  t.classList.add('is-active');
+  qs('#tab-'+t.dataset.tab).classList.add('is-active');
+  history.replaceState(null,'','?id='+mine.id+'#'+t.dataset.tab);
+}));
+if(location.hash){ const t = qs('.tab[data-tab="'+location.hash.slice(1)+'"]'); if(t) t.click(); }
+
+const goEdit = () => location.href = 'mine-add.html?id=' + mine.id;
+document.getElementById('btnEdit').addEventListener('click', goEdit);
+document.getElementById('btnEdit2').addEventListener('click', goEdit);
+document.getElementById('cpAdd').addEventListener('click', ()=>toast('POC: Add Contact Person'));
+qsa('#peopleGrid .icon-btn').forEach(b=>b.addEventListener('click', ()=>{
+  const who = b.dataset.name;
+  if(b.dataset.act === 'notes')         openNotes(who);
+  else if(b.dataset.act === 'crm')      toast('POC: CRM logs for ' + who);
+  else if(b.dataset.act === 'linkedin') toast('POC: open ' + who + '’s LinkedIn profile');
+  else                                  toast('POC: edit ' + who);
+}));
+document.getElementById('mAdd').addEventListener('click',  ()=>toast('POC: Add Machine'));
+</script>
+</body>
+</html>

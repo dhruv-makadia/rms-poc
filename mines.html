@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mine · RMS — Rosco Mining Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="backdrop"></div>
+
+  <!-- ================= Sidebar ================= -->
+  <aside class="sidebar">
+    <div class="sidebar__head">
+      <a class="logo" href="mines.html" id="sideLogo"></a>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-item is-active" href="mines.html"><img class="nav-item__img" src="assets/img/icon-mine.png" alt=""><span>Mines</span></a>
+    </nav>
+  </aside>
+
+  <!-- ================= Main ================= -->
+  <div class="main">
+
+    <!-- Topbar: hamburger + logo + profile (as in the legacy header) -->
+    <header class="topbar">
+      <button class="icon-btn" data-toggle-sidebar aria-label="Toggle navigation" id="btnMenu"></button>
+      <a class="logo topbar__logo" href="mines.html" id="topLogo"></a>
+      <div class="topbar__spacer"></div>
+
+      <div class="profile">
+        <button class="profile__btn" aria-label="Account">
+          <span class="avatar" id="ava">AU</span>
+          <svg class="profile__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown">
+          <div class="dropdown__head">
+            <span class="avatar">AU</span>
+            <span><b>Admin User</b><span>admin@roscomining.com</span></span>
+          </div>
+          <button class="dropdown__item" data-i="user">My Profile</button>
+          <button class="dropdown__item" data-i="lock">Change Password</button>
+          <div class="dropdown__sep"></div>
+          <button class="dropdown__item dropdown__item--danger" data-i="logout" data-logout>Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page -->
+    <main class="page">
+      <div class="page__head">
+        <div>
+          <h1 class="page__title">Mine</h1>
+          <p class="page__sub"><b id="resultCount">0</b> records</p>
+        </div>
+
+        <div class="page__actions">
+          <div class="input-group input-group--search" style="width:280px">
+            <svg class="input-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input class="input" type="search" id="search" placeholder="Search by Contact/Abbreviation">
+          </div>
+          <button class="btn btn--ghost" id="btnFilter" data-i="filter">
+            Filter <span class="count-badge" id="filterCount" hidden>0</span>
+          </button>
+          <a class="btn btn--primary btn--icon" href="mine-add.html" title="Add Mine" id="btnAdd"></a>
+        </div>
+      </div>
+
+      <!-- List -->
+      <div class="mine-list" id="mineList"></div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <span>Showing <b id="pgFrom">0</b>–<b id="pgTo">0</b> of <b id="pgTotal">0</b></span>
+        <select class="select" id="pageSize" style="width:auto;height:34px">
+          <option value="10" selected>10 / page</option>
+          <option value="25">25 / page</option>
+          <option value="50">50 / page</option>
+        </select>
+        <div class="pagination__pages" id="pages"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================= Filter drawer ================= -->
+<div class="drawer-scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Filters">
+  <div class="drawer__head">
+    <h3>Filter</h3>
+    <button class="icon-btn" id="drawerClose" style="margin-left:auto" aria-label="Close"></button>
+  </div>
+  <div class="drawer__body" id="filterBody"></div>
+  <div class="drawer__foot">
+    <button class="btn btn--ghost" id="btnClear">Clear All</button>
+    <button class="btn btn--primary" id="btnApply">Apply</button>
+  </div>
+</aside>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* ---- icons & logos ---- */
+document.querySelectorAll('[data-i]').forEach(el=>el.insertAdjacentHTML('afterbegin', icon(el.dataset.i)));
+document.getElementById('btnMenu').innerHTML   = icon('menu');
+document.getElementById('btnAdd').innerHTML    = icon('plus');
+document.getElementById('drawerClose').innerHTML = icon('close');
+document.getElementById('sideLogo').innerHTML  = brandLogo();
+document.getElementById('topLogo').innerHTML   = brandLogo();
+
+/* ---- state ---- */
+const FILTERS = [
+  { key:'status',    label:'Status',         field:'status',    opts:LK.status },
+  { key:'region',    label:'Region',         field:'region',    opts:LK.region },
+  { key:'type',      label:'Type',           field:'type',      opts:LK.type },
+  { key:'mineral',   label:'Mineral(s)',     field:'mineral',   opts:LK.mineral },
+  { key:'ownership', label:'Ownership',      field:'ownership', opts:[...new Set(MINES.map(m=>m.ownership))].sort() }
+];
+const state     = { q:'', sort:'machines-desc', page:1, size:10 };
+let   applied   = {};         // { key: [values] }
+let   draft     = {};         // drawer working copy
+let   draftSort = 'machines-desc';
+
+/* ---- filter drawer (accordions + sort) ---- */
+let openAcc = 'sort';
+
+function accBlock(id, title, count, inner){
+  return `<div class="acc ${openAcc===id?'is-open':''}" data-acc="${id}">
+      <button type="button" class="acc__btn">
+        ${esc(title)}
+        ${count ? `<span class="acc__count">${count}</span>` : ''}
+        <svg class="acc__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="acc__panel">${inner}</div>
+    </div>`;
+}
+
+function buildDrawer(){
+  const sortInner = `<div class="radio-list">
+    ${SORTS.map(o=>`
+      <label class="check">
+        <input type="radio" name="sortby" value="${o.key}" ${draftSort===o.key?'checked':''}> ${esc(o.label)}
+      </label>`).join('')}
+  </div>`;
+
+  document.getElementById('filterBody').innerHTML =
+    accBlock('sort','Sort By', 0, sortInner) +
+    FILTERS.map(f=>accBlock(f.key, f.label, (draft[f.key]||[]).length, `
+      <div class="filter-options">
+        ${f.opts.map(o=>`
+          <label class="check">
+            <input type="checkbox" data-k="${f.key}" value="${esc(o)}"
+              ${(draft[f.key]||[]).includes(o)?'checked':''}> ${esc(o)}
+          </label>`).join('')}
+      </div>`)).join('');
+
+  qsa('#filterBody .acc__btn').forEach(b=>b.addEventListener('click',()=>{
+    const acc = b.parentNode;
+    const id  = acc.dataset.acc;
+    const now = acc.classList.contains('is-open');
+    qsa('#filterBody .acc').forEach(a=>a.classList.remove('is-open'));
+    if(!now){ acc.classList.add('is-open'); openAcc = id; } else { openAcc = null; }
+  }));
+
+  qsa('#filterBody input[type=radio]').forEach(r=>r.addEventListener('change',()=>{ draftSort = r.value; }));
+
+  qsa('#filterBody input[type=checkbox]').forEach(cb=>cb.addEventListener('change',()=>{
+    const k = cb.dataset.k;
+    draft[k] = draft[k] || [];
+    draft[k] = cb.checked ? [...draft[k], cb.value] : draft[k].filter(v=>v!==cb.value);
+    if(!draft[k].length) delete draft[k];
+    const badge = cb.closest('.acc').querySelector('.acc__count');
+    const n = (draft[k]||[]).length;
+    if(badge){ badge.textContent = n; badge.hidden = !n; }
+    else if(n){
+      cb.closest('.acc').querySelector('.acc__btn')
+        .insertAdjacentHTML('afterbegin', `<span class="acc__count" style="order:1">${n}</span>`);
+    }
+  }));
+}
+
+function openDrawer(){
+  draft = JSON.parse(JSON.stringify(applied));
+  draftSort = state.sort;
+  buildDrawer();
+  document.getElementById('drawer').classList.add('is-open');
+  document.getElementById('scrim').classList.add('is-open');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('is-open');
+  document.getElementById('scrim').classList.remove('is-open');
+}
+document.getElementById('btnFilter').addEventListener('click', openDrawer);
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+document.getElementById('scrim').addEventListener('click', closeDrawer);
+document.getElementById('btnApply').addEventListener('click', ()=>{
+  applied = draft; state.sort = draftSort; state.page = 1; closeDrawer(); render();
+});
+document.getElementById('btnClear').addEventListener('click', ()=>{
+  draft = {}; draftSort = 'machines-desc'; buildDrawer();
+});
+
+/* ---- list ---- */
+function filtered(){
+  const rows = MINES.filter(m=>{
+    const q = state.q.toLowerCase();
+    if(q && !(m.name+' '+m.company+' '+m.city+' '+m.contactName).toLowerCase().includes(q)) return false;
+    return FILTERS.every(f=>{
+      const sel = applied[f.key];
+      if(!sel || !sel.length) return true;
+      return sel.includes(m[f.field]);
+    });
+  });
+  const [field, dir] = state.sort.split('-');
+  const pick = m => field==='name' ? m.name : field==='city' ? String(m.city) : m[field];
+  rows.sort((a,b)=>{
+    const A = pick(a), B = pick(b);
+    const r = typeof A === 'number' ? A-B : String(A).localeCompare(String(B));
+    return dir==='desc' ? -r : r;
+  });
+  return rows;
+}
+
+function mineLogo(m){
+  const primary = m.image || m.fallback;
+  const cls = m.image ? 'mine-card__logo mine-card__logo--img' : 'mine-card__logo mine-card__logo--photo';
+  return `<div class="${cls}">
+            <img src="${primary}" alt="${esc(m.name)}"
+                 onerror="mineImgFallback(this,'${m.fallback}','${m.color}','${esc(m.initials)}')">
+          </div>`;
+}
+
+function mineCard(m){
+  return `
+  <a class="mine-card" href="mine-details.html?id=${m.id}">
+    ${mineLogo(m)}
+    <div>
+      <div class="mine-card__name">${esc(m.name)}</div>
+      <div class="mine-card__company">${esc(m.company)}</div>
+      <div class="mine-card__addr">${esc(m.address)}</div>
+      <div class="mine-card__meta">
+        <span>${icon('phone')}${esc(m.phone)}</span>
+        <span>${icon('globe')}${esc(m.web)}</span>
+      </div>
+    </div>
+    <div class="mine-stats">
+      <div class="mine-stat">${icon('truck')}<b>${m.trucks}</b><span>Trucks</span></div>
+      <div class="mine-stat">${icon('users')}<b>${m.contacts}</b><span>Contacts</span></div>
+      <div class="mine-stat">${icon('cog')}<b>${m.machines}</b><span>Machines</span></div>
+    </div>
+    <div class="mine-card__right">
+      <span class="pill ${m.status==='Active'?'pill--active':'pill--inactive'}">${m.status}</span>
+    </div>
+  </a>`;
+}
+
+function render(){
+  const rows  = filtered();
+  const total = rows.length;
+  const pages = Math.max(1, Math.ceil(total/state.size));
+  if(state.page > pages) state.page = pages;
+  const from  = (state.page-1)*state.size;
+  const slice = rows.slice(from, from+state.size);
+
+  document.getElementById('mineList').innerHTML = slice.length
+    ? slice.map(mineCard).join('')
+    : `<div class="card"><div class="empty">${icon('search')}<h4>No records found</h4><p>Try a different search term or clear the filters.</p></div></div>`;
+
+  document.getElementById('resultCount').textContent = total;
+  document.getElementById('pgFrom').textContent  = total ? from+1 : 0;
+  document.getElementById('pgTo').textContent    = from+slice.length;
+  document.getElementById('pgTotal').textContent = total;
+
+  const n = Object.values(applied).reduce((s,a)=>s+a.length,0);
+  const badge = document.getElementById('filterCount');
+  badge.textContent = n; badge.hidden = !n;
+
+  renderPager(document.getElementById('pages'), state.page, pages, p=>{
+    state.page = p; render(); window.scrollTo({top:0,behavior:'smooth'});
+  });
+}
+
+document.getElementById('search').addEventListener('input', e=>{ state.q=e.target.value; state.page=1; render(); });
+document.getElementById('pageSize').addEventListener('change', e=>{ state.size=+e.target.value; state.page=1; render(); });
+render();
+</script>
+</body>
+</html>

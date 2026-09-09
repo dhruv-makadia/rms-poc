@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Request Access · RMS — Rosco Mining Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="auth">
+
+  <aside class="auth__brand">
+    <div class="auth__hero">
+      <span class="auth__eyebrow">RMS · New User</span>
+      <h1>Request access to<br><em>RMS</em>.</h1>
+      <p>RMS accounts are created by an administrator. Send your details and the
+         RMS team will set you up with the right role and mines.</p>
+
+      <svg class="auth__illustration" viewBox="0 0 460 190" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".26"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity=".06"/>
+          </linearGradient>
+        </defs>
+        <rect x="118" y="34" width="224" height="132" rx="16" fill="url(#g1)"/>
+        <circle cx="180" cy="82" r="22" fill="#F7941E" opacity=".92"/>
+        <path d="M150 132a30 30 0 0 1 60 0Z" fill="#F7941E" opacity=".92"/>
+        <rect x="228" y="70" width="86" height="8" rx="4" fill="#fff" fill-opacity=".7"/>
+        <rect x="228" y="88" width="66" height="8" rx="4" fill="#fff" fill-opacity=".45"/>
+        <rect x="228" y="106" width="76" height="8" rx="4" fill="#fff" fill-opacity=".3"/>
+        <circle cx="386" cy="52" r="9" fill="#fff" fill-opacity=".26"/>
+        <circle cx="80" cy="140" r="6" fill="#fff" fill-opacity=".24"/>
+      </svg>
+
+      <div class="auth__points">
+        <span class="auth__point" data-i="shield">Reviewed by an admin</span>
+        <span class="auth__point" data-i="clock">Usually within 1 business day</span>
+      </div>
+    </div>
+    <p class="auth__foot">© 2026 Rosco Mining Solutions · Migration POC · Not connected to production data</p>
+  </aside>
+
+  <main class="auth__panel">
+    <div class="auth__card">
+      <a class="logo" href="index.html" id="brandLogoDark"></a>
+
+      <!-- form state -->
+      <div id="stateForm">
+        <h2>Request access</h2>
+        <p class="lead">Tell us who you are and which mine you work with.</p>
+
+        <div class="auth__error" id="authError"></div>
+
+        <form class="auth__form" id="reqForm" novalidate>
+          <div class="field">
+            <label class="field__label" for="fname">First Name <span class="req">*</span></label>
+            <input class="input" id="fname" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label class="field__label" for="lname">Last Name <span class="req">*</span></label>
+            <input class="input" id="lname" autocomplete="family-name">
+          </div>
+          <div class="field">
+            <label class="field__label" for="email">Email <span class="req">*</span></label>
+            <div class="input-group">
+              <svg class="input-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+              <input class="input" id="email" type="email" autocomplete="email">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="mine">Mine Name <span class="req">*</span></label>
+            <input class="input" id="mine" list="mineList" placeholder="Start typing a mine name">
+            <datalist id="mineList"></datalist>
+          </div>
+          <div class="field">
+            <label class="field__label" for="mobile">Mobile Number</label>
+            <div class="input-group">
+              <svg class="input-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              <input class="input" id="mobile" type="tel" autocomplete="tel">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="jobtitle">Title</label>
+            <input class="input" id="jobtitle" autocomplete="organization-title">
+          </div>
+
+          <button class="btn btn--primary btn--block" type="submit" id="sendBtn" style="height:44px">
+            Request Access
+          </button>
+        </form>
+
+        <div class="auth__divider">ALREADY HAVE AN ACCOUNT?</div>
+        <a class="btn btn--ghost btn--block" href="index.html">Back to login</a>
+      </div>
+
+      <!-- success state -->
+      <div id="stateDone" class="hide">
+        <div class="auth__done" id="doneIcon"></div>
+        <h2>Request submitted</h2>
+        <p class="lead">Thanks <b id="sentName">—</b>. An RMS administrator will review your request
+           and email <b id="sentMail">your address</b> once your account is ready.</p>
+        <a class="btn btn--primary btn--block" href="index.html" style="height:44px">Back to Log In</a>
+      </div>
+
+      <p class="auth__legal">Protected by role-based access control · v2.0 POC</p>
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.getElementById('brandLogoDark').innerHTML = brandLogo();
+document.querySelectorAll('.auth__point').forEach(el=>el.insertAdjacentHTML('afterbegin', icon(el.dataset.i)));
+document.getElementById('doneIcon').innerHTML = icon('check');
+const err = document.getElementById('authError');
+document.getElementById('mineList').innerHTML =
+  MINES.map(m=>`<option value="${esc(m.name)}"></option>`).join('');
+
+document.getElementById('reqForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const f = id => document.getElementById(id);
+  const required = ['fname','lname','email','mine'];
+  let bad = false;
+  required.forEach(id=>{
+    const empty = !f(id).value.trim();
+    f(id).style.borderColor = empty ? 'var(--danger)' : '';
+    if(empty) bad = true;
+  });
+  const mail = f('email').value.trim();
+  const badMail = mail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+  if(badMail) f('email').style.borderColor = 'var(--danger)';
+
+  if(bad || badMail){
+    err.innerHTML = icon('alert') + '<span>' +
+      (bad ? 'First name, last name, email and mine name are required.'
+           : 'Enter a valid email address.') + '</span>';
+    err.classList.add('is-on');
+    return;
+  }
+  err.classList.remove('is-on');
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true; btn.textContent = 'Submitting…';
+  setTimeout(()=>{
+    document.getElementById('sentName').textContent = f('fname').value.trim();
+    document.getElementById('sentMail').textContent = mail;
+    document.getElementById('stateForm').classList.add('hide');
+    document.getElementById('stateDone').classList.remove('hide');
+  }, 700);
+});
+</script>
+</body>
+</html>

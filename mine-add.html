@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Mine · RMS — Rosco Mining Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="backdrop"></div>
+
+  <aside class="sidebar">
+    <div class="sidebar__head">
+      <a class="logo" href="mines.html" id="sideLogo"></a>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav-item is-active" href="mines.html"><img class="nav-item__img" src="assets/img/icon-mine.png" alt=""><span>Mines</span></a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn" data-toggle-sidebar aria-label="Toggle navigation" id="btnMenu"></button>
+      <a class="logo topbar__logo" href="mines.html" id="topLogo"></a>
+      <div class="topbar__spacer"></div>
+      <div class="profile">
+        <button class="profile__btn" aria-label="Account">
+          <span class="avatar">AU</span>
+          <svg class="profile__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown">
+          <div class="dropdown__head">
+            <span class="avatar">AU</span>
+            <span><b>Admin User</b><span>admin@roscomining.com</span></span>
+          </div>
+          <button class="dropdown__item" data-i="user">My Profile</button>
+          <button class="dropdown__item" data-i="lock">Change Password</button>
+          <div class="dropdown__sep"></div>
+          <button class="dropdown__item dropdown__item--danger" data-i="logout" data-logout>Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="page__head">
+        <div><h1 class="page__title" id="formTitle">Add Mine</h1></div>
+        <div class="page__actions">
+          <a class="btn btn--ghost" href="mines.html" data-i="back" id="btnBack">Back</a>
+        </div>
+      </div>
+
+      <form class="card" id="mineForm" novalidate>
+        <div class="card__body">
+
+          <!-- 1. Mine information -->
+          <div class="form-section">
+            <div class="form-section__head">
+              <span class="form-section__num">1</span><h4>Mine Information</h4>
+            </div>
+            <div class="form-grid">
+              <div class="field col-span-2">
+                <label class="field__label" for="f_name">Mine Name <span class="req">*</span></label>
+                <input class="input" id="f_name" placeholder="e.g. Suncor/Steepbank &amp; Millenium">
+              </div>
+              <div class="field col-span-2">
+                <label class="field__label" for="f_company">Company Name <span class="req">*</span></label>
+                <input class="input" id="f_company" placeholder="e.g. Suncor Energy Inc., Oil Sands">
+              </div>
+              <div class="field">
+                <label class="field__label" for="f_locations">Mine Locations</label>
+                <input class="input" id="f_locations" placeholder="e.g. Steepbank &amp; Millenium Mines">
+              </div>
+              <div class="field">
+                <label class="field__label" for="f_ownership">Ownership</label>
+                <input class="input" id="f_ownership" placeholder="e.g. Suncor">
+              </div>
+              <div class="field">
+                <label class="field__label" for="f_type">Type</label>
+                <select class="select" id="f_type"></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="f_mineral">Mineral(s)</label>
+                <select class="select" id="f_mineral"></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="f_equip">Equipment Type</label>
+                <input class="input" id="f_equip" placeholder="e.g. TSHWZG">
+              </div>
+              <div class="field">
+                <label class="field__label" for="f_status">Status</label>
+                <select class="select" id="f_status"></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Address -->
+          <div class="form-section">
+            <div class="form-section__head">
+              <span class="form-section__num">2</span><h4>Address</h4>
+            </div>
+            <div class="form-grid">
+              <div class="field col-span-2">
+                <label class="field__label" for="f_address">Address</label>
+                <textarea class="input" id="f_address" placeholder="Street, P.O. Box, suite…"></textarea>
+              </div>
+              <div class="field"><label class="field__label" for="f_city">City</label><input class="input" id="f_city"></div>
+              <div class="field"><label class="field__label" for="f_county">County</label><input class="input" id="f_county"></div>
+              <div class="field"><label class="field__label" for="f_state">State / Province</label><input class="input" id="f_state"></div>
+              <div class="field"><label class="field__label" for="f_postal">Postal</label><input class="input" id="f_postal"></div>
+              <div class="field">
+                <label class="field__label" for="f_country">Country</label>
+                <select class="select" id="f_country"></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="f_region">Region</label>
+                <select class="select" id="f_region"></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Contact -->
+          <div class="form-section">
+            <div class="form-section__head">
+              <span class="form-section__num">3</span><h4>Contact</h4>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label class="field__label" for="f_phone">Phone</label><input class="input" id="f_phone"></div>
+              <div class="field"><label class="field__label" for="f_fax">Fax</label><input class="input" id="f_fax"></div>
+              <div class="field"><label class="field__label" for="f_email">Email</label><input class="input" id="f_email" type="email"></div>
+              <div class="field"><label class="field__label" for="f_web">Website</label><input class="input" id="f_web"></div>
+              <div class="field"><label class="field__label" for="f_kcname">Key Contact Name</label><input class="input" id="f_kcname"></div>
+              <div class="field"><label class="field__label" for="f_kctitle">Key Contact Title</label><input class="input" id="f_kctitle"></div>
+            </div>
+          </div>
+
+          <!-- 4. Image -->
+          <div class="form-section" style="margin-bottom:0">
+            <div class="form-section__head">
+              <span class="form-section__num">4</span><h4>Mine Image</h4>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label class="upload" for="f_image" id="uploadBox">
+                  <b>Click to upload</b>
+                  <span>PNG or JPG · shown on the mine card and details page</span>
+                </label>
+                <input id="f_image" type="file" accept="image/*" class="hide">
+              </div>
+              <div class="field">
+                <span class="field__label">Preview</span>
+                <div class="mine-hero" style="max-width:260px">
+                  <div class="mine-hero__img mine-hero__img--photo" id="imgPreview" style="height:150px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card__body form-actions" style="padding-top:16px">
+          <a class="btn btn--ghost" href="mines.html" id="btnCancel">Cancel</a>
+          <button class="btn btn--primary" type="submit" id="btnSave" data-i="save">Save</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.querySelectorAll('[data-i]').forEach(el=>el.insertAdjacentHTML('afterbegin', icon(el.dataset.i)));
+document.getElementById('btnMenu').innerHTML  = icon('menu');
+document.getElementById('sideLogo').innerHTML = brandLogo();
+document.getElementById('topLogo').innerHTML  = brandLogo();
+document.getElementById('uploadBox').insertAdjacentHTML('afterbegin', icon('image'));
+
+/* dropdown options */
+const fill = (id, list, blank) => {
+  const el = document.getElementById(id);
+  el.innerHTML = (blank ? `<option value="">— Select —</option>` : '')
+    + list.map(o=>`<option>${esc(o)}</option>`).join('');
+};
+fill('f_type', LK.type, true);
+fill('f_mineral', LK.mineral, true);
+fill('f_status', LK.status);
+fill('f_country', LK.country, true);
+fill('f_region', LK.region, true);
+
+/* edit mode — prefill from the selected mine */
+const editing = MINES.find(m=>m.id === +param('id'));
+if(editing){
+  document.title = 'Edit Mine · RMS';
+  document.getElementById('formTitle').textContent = 'Edit Mine';
+  const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.value = v || ''; };
+  set('f_name', editing.name);        set('f_company', editing.company);
+  set('f_locations', editing.locations); set('f_ownership', editing.ownership);
+  set('f_type', editing.type);        set('f_mineral', editing.mineral);
+  set('f_equip', editing.equipType);  set('f_status', editing.status);
+  set('f_address', editing.address);  set('f_city', editing.city);
+  set('f_county', editing.county);    set('f_postal', editing.postal);
+  set('f_region', editing.region);    set('f_phone', editing.phone);
+  set('f_fax', editing.fax);          set('f_email', editing.email);
+  set('f_web', editing.web);          set('f_kcname', editing.contactName);
+  set('f_kctitle', editing.contactTitle);
+  const back = 'mine-details.html?id=' + editing.id;
+  document.getElementById('btnBack').href   = back;
+  document.getElementById('btnCancel').href = back;
+
+  document.getElementById('imgPreview').innerHTML =
+    `<img src="${editing.image || editing.fallback}" alt="${esc(editing.name)}"
+          onerror="heroImgFallback(this,'${editing.fallback}')">`;
+}
+
+/* image preview */
+document.getElementById('f_image').addEventListener('change', e=>{
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => document.getElementById('imgPreview').innerHTML = `<img src="${r.result}" alt="Preview">`;
+  r.readAsDataURL(f);
+});
+
+/* save */
+document.getElementById('mineForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const name = document.getElementById('f_name');
+  const comp = document.getElementById('f_company');
+  let bad = false;
+  [name, comp].forEach(el=>{
+    const empty = !el.value.trim();
+    el.style.borderColor = empty ? 'var(--danger)' : '';
+    if(empty) bad = true;
+  });
+  if(bad){ toast('Mine Name and Company Name are required'); return; }
+  toast(editing ? 'POC: mine updated' : 'POC: mine created');
+  setTimeout(()=>{
+    location.href = editing ? 'mine-details.html?id=' + editing.id : 'mines.html';
+  }, 900);
+});
+</script>
+</body>
+</html>

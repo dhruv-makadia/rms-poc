@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · RMS — Rosco Mining Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="auth">
+
+  <!-- ============ Brand panel ============ -->
+  <aside class="auth__brand">
+    <div class="auth__hero">
+      <span class="auth__eyebrow">RMS · Rosco Mining Solutions</span>
+      <h1>Every mine, fleet and<br>machine in <em>one place</em>.</h1>
+      <p>Track mines, fleets, machines, contacts and distributors across your global
+         operations — with the speed of a modern interface.</p>
+
+      <!-- Simple geometric mining illustration (pure SVG) -->
+      <svg class="auth__illustration" viewBox="0 0 460 210" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".26"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity=".06"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#F7941E"/><stop offset="1" stop-color="#E1251B"/>
+          </linearGradient>
+        </defs>
+        <!-- terraced pit -->
+        <path d="M10 175h440" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+        <path d="M60 175 110 120h120l52 55Z" fill="url(#g1)"/>
+        <path d="M250 175 300 96h96l44 79Z" fill="url(#g1)"/>
+        <path d="M110 120h120M132 143h86M300 96h96M280 130h96" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
+        <!-- haul truck -->
+        <g transform="translate(96,110)">
+          <path d="M4 30h58l10-30H22L4 30Z" fill="url(#g2)"/>
+          <rect x="60" y="14" width="30" height="16" rx="3" fill="#fff" fill-opacity=".9"/>
+          <rect x="0" y="30" width="96" height="10" rx="4" fill="#fff" fill-opacity=".55"/>
+          <circle cx="24" cy="45" r="11" fill="#21265D" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+          <circle cx="74" cy="45" r="11" fill="#21265D" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+        </g>
+        <!-- floating data chips -->
+        <g opacity=".85">
+          <rect x="316" y="30" width="86" height="26" rx="13" fill="#fff" fill-opacity=".16"/>
+          <circle cx="331" cy="43" r="5" fill="#3BAD4B"/>
+          <rect x="342" y="38" width="48" height="4" rx="2" fill="#fff" fill-opacity=".7"/>
+          <rect x="342" y="46" width="30" height="4" rx="2" fill="#fff" fill-opacity=".4"/>
+          <rect x="30" y="52" width="70" height="24" rx="12" fill="#fff" fill-opacity=".12"/>
+          <circle cx="43" cy="64" r="4.5" fill="#F7941E"/>
+          <rect x="53" y="60" width="36" height="4" rx="2" fill="#fff" fill-opacity=".6"/>
+          <rect x="53" y="68" width="22" height="4" rx="2" fill="#fff" fill-opacity=".35"/>
+        </g>
+        <circle cx="418" cy="46" r="6" fill="#fff" fill-opacity=".3"/>
+        <circle cx="22" cy="112" r="4" fill="#fff" fill-opacity=".25"/>
+        <circle cx="436" cy="120" r="4" fill="#fff" fill-opacity=".25"/>
+      </svg>
+
+      <div class="auth__points">
+        <span class="auth__point" data-i="zap">Faster workflows</span>
+        <span class="auth__point" data-i="shield">Role-based access</span>
+        <span class="auth__point" data-i="grid">Works on any device</span>
+      </div>
+    </div>
+
+    <p class="auth__foot">© 2026 Rosco Mining Solutions · Migration POC · Not connected to production data</p>
+  </aside>
+
+  <!-- ============ Form panel ============ -->
+  <main class="auth__panel">
+    <div class="auth__card">
+      <a class="logo" href="#" id="brandLogoDark"></a>
+
+      <h2>Hi, welcome back</h2>
+      <p class="lead">Sign in to your RMS account to continue.</p>
+
+      <div class="auth__error" id="authError"></div>
+
+      <form class="auth__form" id="loginForm" novalidate>
+        <div class="field">
+          <label class="field__label" for="username">User Name</label>
+          <div class="input-group">
+            <svg class="input-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input class="input" id="username" type="text" placeholder="Enter your user name" autocomplete="username" value="admin">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="password">Password</label>
+          <div class="input-group">
+            <svg class="input-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input class="input" id="password" type="password" placeholder="Enter your password" autocomplete="current-password" value="demo1234">
+            <button class="input-group__action" type="button" id="togglePw" aria-label="Show password"></button>
+          </div>
+        </div>
+
+        <div class="auth__row">
+          <label class="check"><input type="checkbox" checked> Remember me</label>
+          <a class="auth__link" href="forgot-password.html">Forgot Password?</a>
+        </div>
+
+        <button class="btn btn--primary btn--block" type="submit" id="loginBtn" style="height:44px">Log In</button>
+      </form>
+
+      <div class="auth__divider">NEW TO RMS?</div>
+      <a class="btn btn--ghost btn--block" href="request-access.html">Request Access</a>
+
+      <div class="auth__hint">
+        <b>POC demo:</b> credentials are pre-filled — press <b>Log In</b> to open the Mines module.
+        No backend calls are made.
+      </div>
+
+      <p class="auth__legal">Protected by role-based access control · v2.0 POC</p>
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  document.getElementById('brandLogoDark').innerHTML  = brandLogo();
+
+  // brand bullet icons
+  const map = {zap:'zap', shield:'shield', grid:'grid'};
+  document.querySelectorAll('.auth__point').forEach(el=>{
+    el.insertAdjacentHTML('afterbegin', icon(map[el.dataset.i]));
+  });
+
+  // password visibility
+  const pw = document.getElementById('password');
+  const tg = document.getElementById('togglePw');
+  tg.innerHTML = icon('eye');
+  tg.addEventListener('click', ()=>{
+    const show = pw.type === 'password';
+    pw.type = show ? 'text' : 'password';
+    tg.innerHTML = icon(show ? 'eyeOff' : 'eye');
+    tg.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+
+  // submit
+  const err = document.getElementById('authError');
+  document.getElementById('loginForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const u = document.getElementById('username').value.trim();
+    const p = pw.value.trim();
+    if(!u || !p){
+      err.innerHTML = icon('alert') + '<span>Please enter both your user name and password.</span>';
+      err.classList.add('is-on');
+      return;
+    }
+    err.classList.remove('is-on');
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    setTimeout(()=>{ location.href = 'mines.html'; }, 600);
+  });
+</script>
+</body>
+</html>
