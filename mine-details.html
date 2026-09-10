@@ -69,6 +69,7 @@
           <button class="tab is-active" data-tab="details" role="tab">Details</button>
           <button class="tab" data-tab="fleets" role="tab">Fleets</button>
           <button class="tab" data-tab="machines" role="tab">Machines</button>
+          <button class="btn btn--primary btn--sm tabs__action" id="mAdd" title="Add Machine" hidden>Add Machine</button>
         </div>
 
         <!-- ============ DETAILS ============ -->
@@ -133,14 +134,6 @@
 
         <!-- ============ MACHINES ============ -->
         <section class="tab-panel" id="tab-machines">
-          <div class="section-head" style="margin-top:0">
-            <h4>Machines</h4>
-            <span class="count-badge count-badge--soft" id="mCount">0</span>
-            <div class="section-head__actions">
-              <button class="btn btn--primary btn--icon" id="mAdd" title="Add Machine"></button>
-            </div>
-          </div>
-
           <div class="table-wrap">
             <table class="tbl">
               <thead>
@@ -236,7 +229,7 @@ document.getElementById('notesClose').innerHTML = icon('close');
 document.getElementById('fleetClose').innerHTML  = icon('close');
 document.getElementById('equipClose').innerHTML  = icon('close');
 document.getElementById('cpAdd').innerHTML      = icon('plus');
-document.getElementById('mAdd').innerHTML       = icon('plus');
+document.getElementById('mAdd').insertAdjacentHTML('afterbegin', icon('plus'));
 document.getElementById('sideLogo').innerHTML   = brandLogo();
 document.getElementById('topLogo').innerHTML    = brandLogo();
 
@@ -520,7 +513,6 @@ function mRender(){
   document.getElementById('mFrom').textContent  = total ? from+1 : 0;
   document.getElementById('mTo').textContent    = from+slice.length;
   document.getElementById('mTotal').textContent = total;
-  document.getElementById('mCount').textContent = total;
 
   qsa('.tbl thead th.sortable').forEach(th=>{
     const on = th.dataset.k === mState.sort;
@@ -547,6 +539,7 @@ qsa('.tab').forEach(t=>t.addEventListener('click',()=>{
   qsa('.tab-panel').forEach(x=>x.classList.remove('is-active'));
   t.classList.add('is-active');
   qs('#tab-'+t.dataset.tab).classList.add('is-active');
+  document.getElementById('mAdd').hidden = t.dataset.tab !== 'machines';
   history.replaceState(null,'','?id='+mine.id+'#'+t.dataset.tab);
 }));
 if(location.hash){ const t = qs('.tab[data-tab="'+location.hash.slice(1)+'"]'); if(t) t.click(); }
