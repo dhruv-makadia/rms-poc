@@ -756,6 +756,9 @@ table.tbl{width:100%;border-collapse:collapse;min-width:860px}
   .chart__plot{gap:12px;height:210px}
   .tab-panel{padding:16px}
   .tabs{padding:0 8px}
+  .tabs__action-label{display:none}
+  .tabs__action{width:38px;padding:0}
+  .tabs__action svg{margin:0}
 }
 @media (max-width:560px){
   .mine-card{grid-template-columns:1fr}
