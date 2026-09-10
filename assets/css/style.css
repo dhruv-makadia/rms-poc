@@ -479,11 +479,24 @@ ul{margin:0;padding:0;list-style:none}
 .person__rows{display:flex;flex-direction:column;gap:7px;font-size:12.5px;color:var(--muted)}
 .person__rows div{display:flex;align-items:center;gap:8px}
 .person__rows svg{width:14px;height:14px;color:var(--muted-2);flex-shrink:0}
+
+/* social profile links — flexible so more networks can be added later */
+.person__socials{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.person-social{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;border:1px solid var(--border-soft);background:var(--surface-2);
+  transition:.16s var(--ease);
+}
+.person-social svg{width:15px;height:15px;display:block}
+.person-social:hover{transform:translateY(-2px);box-shadow:var(--sh-sm);border-color:var(--border)}
+
 .person__tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-soft)}
 .tag{
   font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:5px;
   background:var(--surface-2);color:var(--muted);border:1px solid var(--border-soft);
 }
+.tag--toggle{background:var(--primary-050);color:var(--primary);border-color:var(--primary-100);cursor:pointer;transition:.14s var(--ease)}
+.tag--toggle:hover{background:var(--primary-100);color:var(--primary-700)}
 
 /* ---------- 13. Fleets tab ------------------------------------------ */
 .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
