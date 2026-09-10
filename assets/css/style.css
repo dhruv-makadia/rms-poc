@@ -490,13 +490,24 @@ ul{margin:0;padding:0;list-style:none}
 .person-social svg{width:15px;height:15px;display:block}
 .person-social:hover{transform:translateY(-2px);box-shadow:var(--sh-sm);border-color:var(--border)}
 
-.person__tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-soft)}
+/* clicking the tags row opens the Equipment Type editor drawer, as in the legacy app */
+.person__tags{
+  display:flex;align-items:center;gap:5px;flex-wrap:wrap;cursor:pointer;
+  margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-soft);
+}
 .tag{
   font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:5px;
   background:var(--surface-2);color:var(--muted);border:1px solid var(--border-soft);
 }
+.person__tags:hover .tag:not(.tag--toggle){border-color:var(--primary);color:var(--primary-700)}
 .tag--toggle{background:var(--primary-050);color:var(--primary);border-color:var(--primary-100);cursor:pointer;transition:.14s var(--ease)}
 .tag--toggle:hover{background:var(--primary-100);color:var(--primary-700)}
+.tags-edit{
+  display:grid;place-items:center;width:20px;height:20px;border-radius:6px;flex-shrink:0;
+  color:var(--muted-2);margin-left:1px;transition:.14s var(--ease);
+}
+.tags-edit svg{width:12px;height:12px}
+.person__tags:hover .tags-edit{color:var(--primary)}
 
 /* ---------- 13. Fleets tab ------------------------------------------ */
 .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
@@ -775,12 +786,14 @@ table.tbl{width:100%;border-collapse:collapse;min-width:860px}
 }
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 20px}
 .form-grid--3{grid-template-columns:repeat(3,1fr)}
+.form-grid--img{grid-template-columns:50% 20%}
 .form-grid .col-span-2{grid-column:span 2}
 .req{color:var(--danger)}
 textarea.input{height:auto;min-height:84px;padding:10px 13px;resize:vertical;line-height:1.55}
 .upload{
+  height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   border:1.5px dashed var(--border);border-radius:var(--r);background:var(--surface-2);
-  padding:22px;text-align:center;color:var(--muted);transition:.16s var(--ease);cursor:pointer;
+  padding:12px;text-align:center;color:var(--muted);transition:.16s var(--ease);cursor:pointer;
 }
 .upload:hover{border-color:var(--primary);background:var(--primary-050);color:var(--primary)}
 .upload svg{width:26px;height:26px;margin:0 auto 8px}
@@ -797,7 +810,7 @@ textarea.input{height:auto;min-height:84px;padding:10px 13px;resize:vertical;lin
 .mine-hero__img--photo img{width:100%;height:100%;object-fit:cover}
 
 @media (max-width:860px){
-  .form-grid,.form-grid--3{grid-template-columns:1fr}
+  .form-grid,.form-grid--3,.form-grid--img{grid-template-columns:1fr}
   .form-grid .col-span-2{grid-column:span 1}
   .drawer{width:100%}
 }
@@ -850,12 +863,11 @@ textarea.input{height:auto;min-height:84px;padding:10px 13px;resize:vertical;lin
   padding-bottom:24px;border-bottom:1px solid var(--border-soft);margin-bottom:24px;
 }
 .overview__media{
-  border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border-soft);
-  background:var(--surface-2);aspect-ratio:16/9;display:grid;place-items:center;
+  border-radius:var(--r-md);overflow:hidden;
+  background:var(--surface-2);aspect-ratio:16/9;
 }
-.overview__media img{width:100%;height:100%;object-fit:cover;display:block}
+.overview__media img{width:100%;height:100%;object-fit:contain;display:block}
 .overview__media--logo{background:#fff;padding:16px}
-.overview__media--logo img{object-fit:contain;width:auto;max-width:100%;max-height:100%}
 
 .org{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
 .org h3{font-size:21px;line-height:1.25}
@@ -910,9 +922,15 @@ textarea.input{height:auto;min-height:84px;padding:10px 13px;resize:vertical;lin
 .mine-card__logo--photo{padding:0;overflow:hidden;background:var(--surface-2)!important}
 .mine-card__logo--photo img{width:100%;height:100%;object-fit:cover}
 
-/* image preview inside the Add / Edit form */
-#imgPreview{overflow:hidden}
-#imgPreview img{width:100%;height:100%;object-fit:cover;display:block}
+/* image preview inside the Add / Edit form — same height as the upload
+   dropzone so the two sit level; "Preview" only shows before an image exists */
+#imgPreview{
+  height:140px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  border:1px solid var(--border-soft);border-radius:var(--r);background:var(--surface-2);
+  color:var(--muted-2);font-size:12.5px;font-weight:700;letter-spacing:.02em;
+}
+#imgPreview:empty::before{content:'Preview'}
+#imgPreview img{width:100%;height:100%;object-fit:contain;display:block}
 
 /* ---------- 23. Collapsed sidebar mark ------------------------------- */
 .logo__full{height:44px;width:auto;display:block}

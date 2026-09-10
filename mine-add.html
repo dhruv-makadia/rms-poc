@@ -57,10 +57,29 @@
       <form class="card" id="mineForm" novalidate>
         <div class="card__body">
 
-          <!-- 1. Mine information -->
+          <!-- 1. Image -->
           <div class="form-section">
             <div class="form-section__head">
-              <span class="form-section__num">1</span><h4>Mine Information</h4>
+              <span class="form-section__num">1</span><h4>Mine Image</h4>
+            </div>
+            <div class="form-grid form-grid--img">
+              <div class="field">
+                <label class="upload" for="f_image" id="uploadBox">
+                  <b>Click to upload</b>
+                  <span>PNG or JPG · shown on the mine card and details page</span>
+                </label>
+                <input id="f_image" type="file" accept="image/*" class="hide">
+              </div>
+              <div class="field">
+                <div id="imgPreview"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Mine information -->
+          <div class="form-section">
+            <div class="form-section__head">
+              <span class="form-section__num">2</span><h4>Mine Information</h4>
             </div>
             <div class="form-grid">
               <div class="field col-span-2">
@@ -98,10 +117,10 @@
             </div>
           </div>
 
-          <!-- 2. Address -->
+          <!-- 3. Address -->
           <div class="form-section">
             <div class="form-section__head">
-              <span class="form-section__num">2</span><h4>Address</h4>
+              <span class="form-section__num">3</span><h4>Address</h4>
             </div>
             <div class="form-grid">
               <div class="field col-span-2">
@@ -123,10 +142,10 @@
             </div>
           </div>
 
-          <!-- 3. Contact -->
-          <div class="form-section">
+          <!-- 4. Contact -->
+          <div class="form-section" style="margin-bottom:0">
             <div class="form-section__head">
-              <span class="form-section__num">3</span><h4>Contact</h4>
+              <span class="form-section__num">4</span><h4>Contact</h4>
             </div>
             <div class="form-grid">
               <div class="field"><label class="field__label" for="f_phone">Phone</label><input class="input" id="f_phone"></div>
@@ -135,28 +154,6 @@
               <div class="field"><label class="field__label" for="f_web">Website</label><input class="input" id="f_web"></div>
               <div class="field"><label class="field__label" for="f_kcname">Key Contact Name</label><input class="input" id="f_kcname"></div>
               <div class="field"><label class="field__label" for="f_kctitle">Key Contact Title</label><input class="input" id="f_kctitle"></div>
-            </div>
-          </div>
-
-          <!-- 4. Image -->
-          <div class="form-section" style="margin-bottom:0">
-            <div class="form-section__head">
-              <span class="form-section__num">4</span><h4>Mine Image</h4>
-            </div>
-            <div class="form-grid">
-              <div class="field">
-                <label class="upload" for="f_image" id="uploadBox">
-                  <b>Click to upload</b>
-                  <span>PNG or JPG · shown on the mine card and details page</span>
-                </label>
-                <input id="f_image" type="file" accept="image/*" class="hide">
-              </div>
-              <div class="field">
-                <span class="field__label">Preview</span>
-                <div class="mine-hero" style="max-width:260px">
-                  <div class="mine-hero__img mine-hero__img--photo" id="imgPreview" style="height:150px"></div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

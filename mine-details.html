@@ -208,6 +208,23 @@
   <div class="drawer__body" id="fleetBody" style="padding:0 20px 20px"></div>
 </aside>
 
+<aside class="drawer" id="equipDrawer" aria-label="Equipment Type">
+  <div class="drawer__head">
+    <div>
+      <h3>Equipment Type</h3>
+      <p style="font-size:12.5px;color:var(--muted)" id="equipFor">—</p>
+    </div>
+    <button class="icon-btn" id="equipClose" style="margin-left:auto" aria-label="Close"></button>
+  </div>
+  <div class="drawer__body">
+    <div class="filter-options" id="equipOptions" style="max-height:none"></div>
+  </div>
+  <div class="drawer__foot">
+    <button class="btn btn--ghost" id="equipCancel">Cancel</button>
+    <button class="btn btn--primary" id="equipSubmit">Submit</button>
+  </div>
+</aside>
+
 <script src="assets/js/data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
@@ -217,6 +234,7 @@ document.getElementById('btnNotes2').innerHTML  = icon('note');
 document.getElementById('btnEdit2').innerHTML   = icon('edit');
 document.getElementById('notesClose').innerHTML = icon('close');
 document.getElementById('fleetClose').innerHTML  = icon('close');
+document.getElementById('equipClose').innerHTML  = icon('close');
 document.getElementById('cpAdd').innerHTML      = icon('plus');
 document.getElementById('mAdd').innerHTML       = icon('plus');
 document.getElementById('sideLogo').innerHTML   = brandLogo();
@@ -269,39 +287,71 @@ document.getElementById('infoGrid').innerHTML = INFO.map(([k,v])=>`
     <dd class="${v?'':'is-empty'}">${v?esc(v):'Not specified'}</dd></div>`).join('');
 
 /* ---- Contact persons ---- */
-document.getElementById('cpCount').textContent = CONTACTS.length;
-document.getElementById('peopleGrid').innerHTML = CONTACTS.map(c=>{
-  const ini = c.name.split(' ').map(w=>w[0]).slice(0,2).join('');
-  return `<article class="person">
-    <div class="person__top">
-      <img class="person__photo" src="${c.photo}" alt="${esc(c.name)}"
-           onerror="contactImgFallback(this,'${esc(ini)}')">
-      <div class="person__info">
-        <div class="person__name">${esc(c.name)}</div>
-        <div class="person__title">${esc(c.title)}</div>
+function renderPeople(){
+  document.getElementById('cpCount').textContent = CONTACTS.length;
+  document.getElementById('peopleGrid').innerHTML = CONTACTS.map(c=>{
+    const ini = c.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+    return `<article class="person">
+      <div class="person__top">
+        <img class="person__photo" src="${c.photo}" alt="${esc(c.name)}"
+             onerror="contactImgFallback(this,'${esc(ini)}')">
+        <div class="person__info">
+          <div class="person__name">${esc(c.name)}</div>
+          <div class="person__title">${esc(c.title)}</div>
+        </div>
+        <div class="person__actions">
+          <button class="icon-btn" title="CRM" data-act="crm" data-name="${esc(c.name)}">${icon('crm')}</button>
+          <button class="icon-btn" title="Notes" data-act="notes" data-name="${esc(c.name)}">${icon('note')}</button>
+          <button class="icon-btn" title="Edit" data-act="edit" data-name="${esc(c.name)}">${icon('edit')}</button>
+        </div>
       </div>
-      <div class="person__actions">
-        <button class="icon-btn" title="CRM" data-act="crm" data-name="${esc(c.name)}">${icon('crm')}</button>
-        <button class="icon-btn" title="Notes" data-act="notes" data-name="${esc(c.name)}">${icon('note')}</button>
-        <button class="icon-btn" title="Edit" data-act="edit" data-name="${esc(c.name)}">${icon('edit')}</button>
+      <div class="person__rows">
+        <div>${icon('phone')}${esc(c.phone)}</div>
+        <div>${icon('mail')}${esc(c.email)}</div>
+        <div>${icon('clock')}Last Contact: ${esc(c.last)}</div>
       </div>
-    </div>
-    <div class="person__rows">
-      <div>${icon('phone')}${esc(c.phone)}</div>
-      <div>${icon('mail')}${esc(c.email)}</div>
-      <div>${icon('clock')}Last Contact: ${esc(c.last)}</div>
-    </div>
-    <div class="person__socials">
-      <button class="person-social" title="LinkedIn" data-act="linkedin" data-name="${esc(c.name)}">${socialIcon('linkedin')}</button>
-      <button class="person-social" title="Twitter" data-act="twitter" data-name="${esc(c.name)}">${socialIcon('twitter')}</button>
-      <button class="person-social" title="Facebook" data-act="facebook" data-name="${esc(c.name)}">${socialIcon('facebook')}</button>
-    </div>
-    <div class="person__tags">
-      ${c.tags.map((t,i)=>`<span class="tag${i>=3?' tag--extra':''}"${i>=3 && c.tags.length>4?' hidden':''}>${esc(t)}</span>`).join('')}
-      ${c.tags.length>4 ? `<button type="button" class="tag tag--toggle" data-state="more">+${c.tags.length-3} more</button>` : ''}
-    </div>
-  </article>`;
-}).join('');
+      <div class="person__socials">
+        <button class="person-social" title="LinkedIn" data-act="linkedin" data-name="${esc(c.name)}">${socialIcon('linkedin')}</button>
+        <button class="person-social" title="Twitter" data-act="twitter" data-name="${esc(c.name)}">${socialIcon('twitter')}</button>
+        <button class="person-social" title="Facebook" data-act="facebook" data-name="${esc(c.name)}">${socialIcon('facebook')}</button>
+      </div>
+      <div class="person__tags" data-name="${esc(c.name)}" title="Edit equipment types">
+        <span class="tags-edit">${icon('edit')}</span>
+        ${c.tags.map((t,i)=>`<span class="tag${i>=3?' tag--extra':''}"${i>=3 && c.tags.length>4?' hidden':''}>${esc(t)}</span>`).join('')}
+        ${c.tags.length>4 ? `<button type="button" class="tag tag--toggle" data-state="more">+${c.tags.length-3} more</button>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+}
+renderPeople();
+
+/* ---- Equipment Type editor (drawer) ---- */
+document.getElementById('equipOptions').innerHTML = EQUIPMENT_TYPES.map(t=>`
+  <label class="check"><input type="checkbox" value="${esc(t)}"> ${esc(t)}</label>`).join('');
+
+let equipContact = null;
+function openEquip(c){
+  equipContact = c;
+  document.getElementById('equipFor').textContent = c.name;
+  const active = new Set(c.tags.filter(t=>t!=='Not linked'));
+  qsa('#equipOptions input[type=checkbox]').forEach(cb=>{ cb.checked = active.has(cb.value); });
+  document.getElementById('equipDrawer').classList.add('is-open');
+  document.getElementById('scrim').classList.add('is-open');
+}
+function closeEquip(){
+  document.getElementById('equipDrawer').classList.remove('is-open');
+  document.getElementById('scrim').classList.remove('is-open');
+}
+document.getElementById('equipClose').addEventListener('click', closeEquip);
+document.getElementById('equipCancel').addEventListener('click', closeEquip);
+document.getElementById('equipSubmit').addEventListener('click', ()=>{
+  if(!equipContact) return;
+  const picked = qsa('#equipOptions input[type=checkbox]:checked').map(cb=>cb.value);
+  equipContact.tags = picked.length ? picked : ['Not linked'];
+  renderPeople();
+  closeEquip();
+  toast('Equipment types updated for ' + equipContact.name);
+});
 
 /* ---- Notes panel ---- */
 const notes = NOTES.slice();
@@ -336,7 +386,7 @@ function closeNotes(){
 document.getElementById('btnNotes').addEventListener('click', ()=>openNotes());
 document.getElementById('btnNotes2').addEventListener('click', ()=>openNotes());
 document.getElementById('notesClose').addEventListener('click', closeNotes);
-document.getElementById('scrim').addEventListener('click', ()=>{ closeNotes(); closeFleet(); });
+document.getElementById('scrim').addEventListener('click', ()=>{ closeNotes(); closeFleet(); closeEquip(); });
 document.getElementById('noteSave').addEventListener('click', ()=>{
   const ta = document.getElementById('noteText');
   const text = ta.value.trim();
@@ -505,26 +555,36 @@ const goEdit = () => location.href = 'mine-add.html?id=' + mine.id;
 document.getElementById('btnEdit').addEventListener('click', goEdit);
 document.getElementById('btnEdit2').addEventListener('click', goEdit);
 document.getElementById('cpAdd').addEventListener('click', ()=>toast('POC: Add Contact Person'));
-qsa('#peopleGrid .icon-btn').forEach(b=>b.addEventListener('click', ()=>{
-  const who = b.dataset.name;
-  if(b.dataset.act === 'notes')  openNotes(who);
-  else if(b.dataset.act === 'crm') toast('POC: CRM logs for ' + who);
-  else                              toast('POC: edit ' + who);
-}));
-qsa('#peopleGrid .person-social').forEach(b=>b.addEventListener('click', ()=>{
-  const who = b.dataset.name, act = b.dataset.act;
-  const label = act === 'linkedin' ? 'LinkedIn' : act === 'twitter' ? 'Twitter' : 'Facebook';
-  toast('POC: open ' + who + '’s ' + label + ' profile');
-}));
 document.getElementById('peopleGrid').addEventListener('click', e=>{
-  const btn = e.target.closest('.tag--toggle');
-  if(!btn) return;
-  const wrap = btn.closest('.person__tags');
-  const extras = qsa('.tag--extra', wrap);
-  const expanded = btn.dataset.state === 'less';
-  extras.forEach(t => t.hidden = expanded);
-  btn.textContent = expanded ? '+' + extras.length + ' more' : 'Show less';
-  btn.dataset.state = expanded ? 'more' : 'less';
+  const toggleBtn = e.target.closest('.tag--toggle');
+  if(toggleBtn){
+    const wrap = toggleBtn.closest('.person__tags');
+    const extras = qsa('.tag--extra', wrap);
+    const expanded = toggleBtn.dataset.state === 'less';
+    extras.forEach(t => t.hidden = expanded);
+    toggleBtn.textContent = expanded ? '+' + extras.length + ' more' : 'Show less';
+    toggleBtn.dataset.state = expanded ? 'more' : 'less';
+    return;
+  }
+  const tagsWrap = e.target.closest('.person__tags');
+  if(tagsWrap){
+    const c = CONTACTS.find(x => x.name === tagsWrap.dataset.name);
+    if(c) openEquip(c);
+    return;
+  }
+  const social = e.target.closest('.person-social');
+  if(social){
+    const label = social.dataset.act === 'linkedin' ? 'LinkedIn' : social.dataset.act === 'twitter' ? 'Twitter' : 'Facebook';
+    toast('POC: open ' + social.dataset.name + '’s ' + label + ' profile');
+    return;
+  }
+  const actionBtn = e.target.closest('.person__actions .icon-btn');
+  if(actionBtn){
+    const who = actionBtn.dataset.name;
+    if(actionBtn.dataset.act === 'notes')    openNotes(who);
+    else if(actionBtn.dataset.act === 'crm') toast('POC: CRM logs for ' + who);
+    else                                      toast('POC: edit ' + who);
+  }
 });
 document.getElementById('mAdd').addEventListener('click',  ()=>toast('POC: Add Machine'));
 </script>

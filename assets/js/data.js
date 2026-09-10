@@ -129,13 +129,13 @@ const MINES = [
 const CONTACTS = [
   { name:"Alan Scott", title:"Director of Maintenance – Fort Hill", phone:"1-403-808-6261", email:"alascott@suncor.com", last:"04 Apr 2019", tags:["Not linked"] },
   { name:"Allyson McIntosh", title:"Mine Equipment Maintenance Manager", phone:"1 780 743-6411", email:"amcintosh@suncor.com", last:"14 Dec 2018", tags:["DOZER","ELECT SHOVEL","HYD EXCAVATOR","TRUCK","WHEEL LOADER"] },
-  { name:"Andrew Brandt", title:"Reliability Specialist – Trucks", phone:"Not available", email:"abrandt@suncor.com", last:"11 Aug 2022", tags:["TRUCK","DOZER","WHEEL LOADER","HYD EXCAVATOR","ELECT SHOVEL","GRADER","DRILL"] },
+  { name:"Andrew Brandt", title:"Reliability Specialist – Trucks", phone:"Not available", email:"abrandt@suncor.com", last:"11 Aug 2022", tags:["TRUCK","DOZER","WHEEL LOADER","HYD EXCAVATOR","ELECT SHOVEL","DRAGLINE","DRILL"] },
   { name:"Anne Marie Toutant", title:"VP, Optimization & Integration", phone:"1 780 743-6411", email:"amtoutant@suncor.com", last:"17 Feb 2019", tags:["DOZER","TRUCK","WHEEL LOADER"] },
-  { name:"Anthony Van Tol", title:"Mining Technology Development Lead", phone:"1-403-869-5692", email:"avantol@suncor.com", last:"02 Jun 2025", tags:["AUTONOMOUS HAULAGE","TELEMETRY","FLEET MGMT SYSTEM","GPS TRACKING","PREDICTIVE MAINTENANCE","DATA ANALYTICS"] },
+  { name:"Anthony Van Tol", title:"Mining Technology Development Lead", phone:"1-403-869-5692", email:"avantol@suncor.com", last:"02 Jun 2025", tags:["DOZER","DRAGLINE","DRILL","ELECT SHOVEL","HYD EXCAVATOR","TRUCK"] },
   { name:"Hugues Oneill", title:"Director MEM Field Execution", phone:"1-780-743-6506", email:"honeill@suncor.com", last:"11 Aug 2022", tags:["Not linked"] },
   { name:"Kevin Foley", title:"General Manager, NSE Mine Operations", phone:"1 780 743-6411", email:"kfoley@suncor.com", last:"17 Feb 2019", tags:["DOZER","ELECT SHOVEL","TRUCK"] },
-  { name:"Lynn Gould", title:"Director, Millennium Mine Operations", phone:"1 780 743-6411", email:"lgould@suncor.com", last:"17 Feb 2019", tags:["DOZER","HYD EXCAVATOR","TRUCK","WHEEL LOADER","GRADER"] },
-  { name:"Michael Chwelos", title:"General Manager, Mine Maintenance", phone:"1 780 743-6411", email:"mchwelos@suncor.com", last:"22 Aug 2023", tags:["DOZER","ELECT SHOVEL","TRUCK","WHEEL LOADER","HYD EXCAVATOR","GRADER","DRILL","CRUSHER"] },
+  { name:"Lynn Gould", title:"Director, Millennium Mine Operations", phone:"1 780 743-6411", email:"lgould@suncor.com", last:"17 Feb 2019", tags:["DOZER","HYD EXCAVATOR","TRUCK","WHEEL LOADER","DRAGLINE"] },
+  { name:"Michael Chwelos", title:"General Manager, Mine Maintenance", phone:"1 780 743-6411", email:"mchwelos@suncor.com", last:"22 Aug 2023", tags:["DOZER","ELECT SHOVEL","TRUCK","WHEEL LOADER","HYD EXCAVATOR","DRAGLINE","DRILL","OTHER"] },
   { name:"Pedro Fimbres", title:"Manager, Shovels", phone:"1 780 743-6411", email:"pfimbres@suncor.com", last:"29 Nov 2019", tags:["ELECT SHOVEL","HYD EXCAVATOR"] },
   { name:"Shaun Wadlow", title:"Sr Specialist Mine Engineer", phone:"1-780-799-1336", email:"shwadlow@suncor.com", last:"08 Aug 2025", tags:["Not linked"] },
   { name:"Troy Waye", title:"Maintenance Execution Director", phone:"1-780-370-3143", email:"twaye@suncor.com", last:"11 Aug 2022", tags:["TRUCK","DOZER","WHEEL LOADER","HYD EXCAVATOR"] }
@@ -249,6 +249,9 @@ const NOTES = [
   { author:"Troy Waye", initials:"TW", date:"14 Jul 2026 · 16:40",
     text:"Requested updated tire size sheet for the 797B fleet. Follow up with the distributor." }
 ];
+
+/* ---- Equipment types a contact can be linked to (Contact Persons editor) */
+const EQUIPMENT_TYPES = ["DOZER","DRAGLINE","DRILL","ELECT SHOVEL","HYD EXCAVATOR","OTHER","TRUCK","WHEEL LOADER"];
 
 /* ---- Lookup lists used by the Filter panel and the Add Mine form ------ */
 const LK = {
