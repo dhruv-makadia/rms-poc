@@ -60,14 +60,14 @@
         </div>
 
         <div class="page__actions">
-          <div class="input-group input-group--search" style="width:280px">
+          <div class="input-group input-group--search page__search">
             <svg class="input-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
             <input class="input" type="search" id="search" placeholder="Search by Contact/Abbreviation">
           </div>
-          <button class="btn btn--ghost" id="btnFilter" data-i="filter">
-            Filter <span class="count-badge" id="filterCount" hidden>0</span>
+          <button class="btn btn--ghost btn--collapse" id="btnFilter" data-i="filter" title="Filter">
+            <span class="btn-label">Filter</span> <span class="count-badge" id="filterCount" hidden>0</span>
           </button>
-          <a class="btn btn--primary btn--icon" href="mine-add.html" title="Add Mine" id="btnAdd"></a>
+          <a class="btn btn--primary btn--collapse" href="mine-add.html" title="Add Mine" id="btnAdd"><span class="btn-label">Add Mine</span></a>
         </div>
       </div>
 
@@ -108,7 +108,7 @@
 /* ---- icons & logos ---- */
 document.querySelectorAll('[data-i]').forEach(el=>el.insertAdjacentHTML('afterbegin', icon(el.dataset.i)));
 document.getElementById('btnMenu').innerHTML   = icon('menu');
-document.getElementById('btnAdd').innerHTML    = icon('plus');
+document.getElementById('btnAdd').insertAdjacentHTML('afterbegin', icon('plus'));
 document.getElementById('drawerClose').innerHTML = icon('close');
 document.getElementById('sideLogo').innerHTML  = brandLogo();
 document.getElementById('topLogo').innerHTML   = brandLogo();
@@ -241,7 +241,10 @@ function mineCard(m){
   <a class="mine-card" href="mine-details.html?id=${m.id}">
     ${mineLogo(m)}
     <div>
-      <div class="mine-card__name">${esc(m.name)}</div>
+      <div class="mine-card__title-row">
+        <span class="mine-card__name">${esc(m.name)}</span>
+        <span class="pill ${m.status==='Active'?'pill--active':'pill--inactive'}">${m.status}</span>
+      </div>
       <div class="mine-card__company">${esc(m.company)}</div>
       <div class="mine-card__addr">${esc(m.address)}</div>
       <div class="mine-card__meta">
@@ -250,12 +253,9 @@ function mineCard(m){
       </div>
     </div>
     <div class="mine-stats">
-      <div class="mine-stat">${icon('truck')}<b>${m.trucks}</b><span>Trucks</span></div>
-      <div class="mine-stat">${icon('users')}<b>${m.contacts}</b><span>Contacts</span></div>
-      <div class="mine-stat">${icon('cog')}<b>${m.machines}</b><span>Machines</span></div>
-    </div>
-    <div class="mine-card__right">
-      <span class="pill ${m.status==='Active'?'pill--active':'pill--inactive'}">${m.status}</span>
+      <div class="mine-stat mine-stat--trucks"><span class="mine-stat__ico">${icon('truck')}</span><span class="mine-stat__val">${m.trucks}</span><span class="mine-stat__lbl">Trucks</span></div>
+      <div class="mine-stat mine-stat--contacts"><span class="mine-stat__ico">${icon('users')}</span><span class="mine-stat__val">${m.contacts}</span><span class="mine-stat__lbl">Contacts</span></div>
+      <div class="mine-stat mine-stat--machines"><span class="mine-stat__ico">${icon('cog')}</span><span class="mine-stat__val">${m.machines}</span><span class="mine-stat__lbl">Machines</span></div>
     </div>
   </a>`;
 }

@@ -50,17 +50,13 @@
     <main class="page">
       <div class="page__head">
         <div>
-          <h1 class="page__title" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <h1 class="page__title" style="display:flex;align-items:center;gap:12px;flex-wrap:nowrap">
             <span id="mineName">Mine</span>
             <span class="pill pill--active" id="mineStatus">Active</span>
           </h1>
         </div>
         <div class="page__actions">
-          <a class="btn btn--ghost" href="mines.html" data-i="back">Back</a>
-          <button class="btn btn--ghost" id="btnNotes" data-i="note">
-            Notes <span class="count-badge count-badge--soft" id="notesCount">0</span>
-          </button>
-          <button class="btn btn--primary" id="btnEdit" data-i="edit">Edit</button>
+          <a class="btn btn--ghost btn--collapse" href="mines.html" data-i="back" title="Back"><span class="btn-label">Back</span></a>
         </div>
       </div>
 
@@ -69,7 +65,7 @@
           <button class="tab is-active" data-tab="details" role="tab">Details</button>
           <button class="tab" data-tab="fleets" role="tab">Fleets</button>
           <button class="tab" data-tab="machines" role="tab">Machines</button>
-          <button class="btn btn--primary btn--sm tabs__action" id="mAdd" title="Add Machine" hidden><span class="tabs__action-label">Add Machine</span></button>
+          <button class="btn btn--primary tabs__action btn--collapse" id="mAdd" title="Add Machine" hidden><span class="btn-label">Add Machine</span></button>
         </div>
 
         <!-- ============ DETAILS ============ -->
@@ -86,6 +82,7 @@
                   <p class="org__addr" id="orgAddr">—</p>
                 </div>
                 <div class="org__actions">
+                  <button class="icon-btn" title="CRM" id="btnCrm"></button>
                   <button class="icon-btn" title="Notes" id="btnNotes2"></button>
                   <button class="icon-btn" title="Edit" id="btnEdit2"></button>
                 </div>
@@ -106,7 +103,7 @@
             <h4>Contact Persons</h4>
             <span class="count-badge count-badge--soft" id="cpCount">0</span>
             <div class="section-head__actions">
-              <button class="btn btn--primary btn--icon btn--sm" id="cpAdd" title="Add Contact"></button>
+              <button class="btn btn--primary btn--collapse" id="cpAdd" title="Add Contact"><span class="btn-label">Add Contact</span></button>
             </div>
           </div>
           <div class="people-grid" id="peopleGrid"></div>
@@ -223,12 +220,13 @@
 <script>
 document.querySelectorAll('[data-i]').forEach(el=>el.insertAdjacentHTML('afterbegin', icon(el.dataset.i)));
 document.getElementById('btnMenu').innerHTML    = icon('menu');
+document.getElementById('btnCrm').innerHTML     = icon('crm');
 document.getElementById('btnNotes2').innerHTML  = icon('note');
 document.getElementById('btnEdit2').innerHTML   = icon('edit');
 document.getElementById('notesClose').innerHTML = icon('close');
 document.getElementById('fleetClose').innerHTML  = icon('close');
 document.getElementById('equipClose').innerHTML  = icon('close');
-document.getElementById('cpAdd').innerHTML      = icon('plus');
+document.getElementById('cpAdd').insertAdjacentHTML('afterbegin', icon('plus'));
 document.getElementById('mAdd').insertAdjacentHTML('afterbegin', icon('plus'));
 document.getElementById('sideLogo').innerHTML   = brandLogo();
 document.getElementById('topLogo').innerHTML    = brandLogo();
@@ -265,8 +263,8 @@ document.getElementById('linkRow').innerHTML = `
   <a href="#" onclick="return false">${icon('globe')}${esc(mine.web)}</a>
   ${mine.email && mine.email!=='—' ? `<a href="#" onclick="return false">${icon('mail')}${esc(mine.email)}</a>` : ''}`;
 
-document.getElementById('socials').innerHTML = ['f','t','in']
-  .map(s=>`<a class="social" href="#" onclick="return false"><span style="font-size:11px;font-weight:800">${s}</span></a>`).join('');
+document.getElementById('socials').innerHTML = ['facebook','x','linkedin']
+  .map(s=>`<a class="social" href="#" onclick="return false" title="${s==='x'?'X':s[0].toUpperCase()+s.slice(1)}">${socialIcon(s)}</a>`).join('');
 
 /* ---- Mine information grid ---- */
 const INFO = [
@@ -305,18 +303,54 @@ function renderPeople(){
       </div>
       <div class="person__socials">
         <button class="person-social" title="LinkedIn" data-act="linkedin" data-name="${esc(c.name)}">${socialIcon('linkedin')}</button>
-        <button class="person-social" title="Twitter" data-act="twitter" data-name="${esc(c.name)}">${socialIcon('twitter')}</button>
+        <button class="person-social" title="X" data-act="x" data-name="${esc(c.name)}">${socialIcon('x')}</button>
         <button class="person-social" title="Facebook" data-act="facebook" data-name="${esc(c.name)}">${socialIcon('facebook')}</button>
       </div>
       <div class="person__tags" data-name="${esc(c.name)}" title="Edit equipment types">
         <span class="tags-edit">${icon('edit')}</span>
-        ${c.tags.map((t,i)=>`<span class="tag${i>=3?' tag--extra':''}"${i>=3 && c.tags.length>4?' hidden':''}>${esc(t)}</span>`).join('')}
-        ${c.tags.length>4 ? `<button type="button" class="tag tag--toggle" data-state="more">+${c.tags.length-3} more</button>` : ''}
+        ${c.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}
+        <button type="button" class="tag tag--toggle" data-state="more" hidden></button>
       </div>
     </article>`;
   }).join('');
+  layoutPersonTags();
 }
 renderPeople();
+
+/* keep each person's equipment-type chips to a single line — hide however many
+   overflow onto a 2nd line and fold them behind a "+N more" toggle, recomputed
+   per card width so it stays correct across breakpoints */
+function layoutPersonTags(){
+  qsa('.person__tags').forEach(wrap=>{
+    const toggle = wrap.querySelector('.tag--toggle');
+    const tags   = qsa('.tag:not(.tag--toggle)', wrap);
+    if(toggle.dataset.state === 'less') return; // user expanded it — leave alone
+    tags.forEach(t=>t.hidden = false);
+    toggle.hidden = true;
+    if(!tags.length) return;
+    // compare against the first tag (not the differently-sized edit icon) so
+    // vertical centering of mixed-height flex items doesn't skew offsetTop
+    const lineTop = tags[0].offsetTop;
+    let firstOverflow = tags.findIndex((t,i)=> i>0 && t.offsetTop > lineTop);
+    if(firstOverflow === -1) return; // everything already fits on one line
+    let visibleCount = firstOverflow;
+    for(let i=visibleCount;i<tags.length;i++) tags[i].hidden = true;
+    toggle.hidden = false;
+    const setCount = n => { toggle.textContent = `+${n} more`; };
+    setCount(tags.length - visibleCount);
+    // the toggle button itself takes room — if adding it wrapped the row, drop one more tag
+    while(visibleCount > 0 && toggle.offsetTop > lineTop){
+      visibleCount--;
+      tags[visibleCount].hidden = true;
+      setCount(tags.length - visibleCount);
+    }
+  });
+}
+let tagsLayoutTimer;
+window.addEventListener('resize', ()=>{
+  clearTimeout(tagsLayoutTimer);
+  tagsLayoutTimer = setTimeout(layoutPersonTags, 150);
+});
 
 /* ---- Equipment Type editor (drawer) ---- */
 document.getElementById('equipOptions').innerHTML = EQUIPMENT_TYPES.map(t=>`
@@ -349,7 +383,6 @@ document.getElementById('equipSubmit').addEventListener('click', ()=>{
 /* ---- Notes panel ---- */
 const notes = NOTES.slice();
 function renderNotes(){
-  document.getElementById('notesCount').textContent  = notes.length;
   document.getElementById('notesCount2').textContent = notes.length;
   document.getElementById('noteList').innerHTML = notes.length ? notes.map(n=>`
     <div class="note-item">
@@ -376,8 +409,8 @@ function closeNotes(){
   document.getElementById('notesDrawer').classList.remove('is-open');
   document.getElementById('scrim').classList.remove('is-open');
 }
-document.getElementById('btnNotes').addEventListener('click', ()=>openNotes());
 document.getElementById('btnNotes2').addEventListener('click', ()=>openNotes());
+document.getElementById('btnCrm').addEventListener('click', ()=>toast('POC: CRM logs for ' + mine.name));
 document.getElementById('notesClose').addEventListener('click', closeNotes);
 document.getElementById('scrim').addEventListener('click', ()=>{ closeNotes(); closeFleet(); closeEquip(); });
 document.getElementById('noteSave').addEventListener('click', ()=>{
@@ -545,18 +578,21 @@ qsa('.tab').forEach(t=>t.addEventListener('click',()=>{
 if(location.hash){ const t = qs('.tab[data-tab="'+location.hash.slice(1)+'"]'); if(t) t.click(); }
 
 const goEdit = () => location.href = 'mine-add.html?id=' + mine.id;
-document.getElementById('btnEdit').addEventListener('click', goEdit);
 document.getElementById('btnEdit2').addEventListener('click', goEdit);
 document.getElementById('cpAdd').addEventListener('click', ()=>toast('POC: Add Contact Person'));
 document.getElementById('peopleGrid').addEventListener('click', e=>{
   const toggleBtn = e.target.closest('.tag--toggle');
   if(toggleBtn){
     const wrap = toggleBtn.closest('.person__tags');
-    const extras = qsa('.tag--extra', wrap);
-    const expanded = toggleBtn.dataset.state === 'less';
-    extras.forEach(t => t.hidden = expanded);
-    toggleBtn.textContent = expanded ? '+' + extras.length + ' more' : 'Show less';
-    toggleBtn.dataset.state = expanded ? 'more' : 'less';
+    const collapsing = toggleBtn.dataset.state === 'less';
+    if(collapsing){
+      toggleBtn.dataset.state = 'more';
+      layoutPersonTags();
+    } else {
+      qsa('.tag:not(.tag--toggle)', wrap).forEach(t=>t.hidden = false);
+      toggleBtn.textContent = 'Show less';
+      toggleBtn.dataset.state = 'less';
+    }
     return;
   }
   const tagsWrap = e.target.closest('.person__tags');
@@ -567,7 +603,7 @@ document.getElementById('peopleGrid').addEventListener('click', e=>{
   }
   const social = e.target.closest('.person-social');
   if(social){
-    const label = social.dataset.act === 'linkedin' ? 'LinkedIn' : social.dataset.act === 'twitter' ? 'Twitter' : 'Facebook';
+    const label = social.dataset.act === 'linkedin' ? 'LinkedIn' : social.dataset.act === 'x' ? 'X' : 'Facebook';
     toast('POC: open ' + social.dataset.name + '’s ' + label + ' profile');
     return;
   }

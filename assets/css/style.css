@@ -186,7 +186,7 @@ ul{margin:0;padding:0;list-style:none}
 
 /* ---------- 6. Status pills / badges -------------------------------- */
 .pill{
-  display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 11px;
+  display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 11px;flex-shrink:0;
   border-radius:var(--r-pill);font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
 }
 .pill--active{background:var(--success);color:#fff}
@@ -345,10 +345,13 @@ ul{margin:0;padding:0;list-style:none}
 
 /* Page canvas */
 .page{padding:18px 26px 26px;flex:1}
-.page__head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
-.page__title{font-size:21px;line-height:1.25}
+.page__head{display:flex;align-items:center;gap:16px;flex-wrap:nowrap;margin-bottom:14px}
+.page__head>div:first-child{min-width:0;flex:1}
+.page__title{font-size:21px;line-height:1.25;min-width:0}
+.page__title>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .page__sub{font-size:12.5px;color:var(--muted);margin-top:2px}
 .page__actions{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.page__search{width:280px;transition:width .16s var(--ease)}
 .breadcrumb{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);margin-bottom:9px}
 .breadcrumb svg{width:13px;height:13px;opacity:.55}
 .breadcrumb a{color:var(--muted);font-weight:600}
@@ -387,7 +390,7 @@ ul{margin:0;padding:0;list-style:none}
 /* ---------- 10. Mine list cards ------------------------------------- */
 .mine-list{display:flex;flex-direction:column;gap:12px}
 .mine-card{
-  display:grid;grid-template-columns:112px 1fr auto auto;gap:20px;align-items:center;
+  display:grid;grid-template-columns:112px 1fr auto;gap:20px;align-items:center;
   background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--r-md);
   padding:16px 20px;box-shadow:var(--sh-sm);transition:.2s var(--ease);position:relative;
 }
@@ -398,26 +401,41 @@ ul{margin:0;padding:0;list-style:none}
 .mine-card:hover{box-shadow:var(--sh-md);transform:translateY(-2px);border-color:#DDE1EC}
 .mine-card:hover::after{opacity:1}
 .mine-card__logo{
-  height:74px;border-radius:var(--r);border:1px solid var(--border-soft);background:var(--surface-2);
+  height:74px;border-radius:var(--r);background:var(--surface-2);overflow:hidden;
   display:grid;place-items:center;font-size:17px;font-weight:800;letter-spacing:.04em;color:#fff;
   text-align:center;padding:6px;line-height:1.1;
 }
-.mine-card__name{font-size:17px;font-weight:800;color:var(--heading);margin-bottom:2px}
+/* real logo images sit flush at the top of the box instead of centred,
+   so the whitespace collects below rather than being split top/bottom */
+.mine-card__logo--img{display:block}
+.mine-card__logo--img img{width:100%;height:100%;object-fit:contain;object-position:top;display:block}
+.mine-card>div:nth-child(2){min-width:0}
+.mine-card__title-row{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin-bottom:2px}
+.mine-card__name{font-size:17px;font-weight:800;color:var(--heading);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .mine-card:hover .mine-card__name{color:var(--primary)}
+.mine-card__title-row .pill{flex-shrink:0}
 .mine-card__company{font-size:13px;font-weight:700;color:var(--text)}
 .mine-card__addr{font-size:12.5px;color:var(--muted);margin-top:2px}
 .mine-card__meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:7px}
 .mine-card__meta span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .mine-card__meta svg{width:13px;height:13px;color:var(--muted-2)}
-.mine-stats{display:flex;gap:6px}
+
+/* trendy compact stat chips — a coloured icon "coin" + value, wraps and
+   shrinks gracefully so it never dominates the card on small screens */
+.mine-stats{display:flex;gap:8px;flex-wrap:wrap}
 .mine-stat{
-  min-width:82px;padding:9px 10px;border-radius:var(--r);background:var(--surface-2);
-  text-align:center;border:1px solid var(--border-soft);
+  display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border-radius:var(--r-pill);
+  background:var(--surface-2);border:1px solid var(--border-soft);
 }
-.mine-stat svg{width:17px;height:17px;color:var(--primary);margin:0 auto 3px}
-.mine-stat b{display:block;font-size:15px;font-weight:800;color:var(--heading);line-height:1.1}
-.mine-stat span{font-size:10.5px;color:var(--muted);letter-spacing:.03em}
-.mine-card__right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.mine-stat__ico{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  background:var(--primary-100);color:var(--primary-700);
+}
+.mine-stat--contacts .mine-stat__ico{background:var(--success-100);color:#2C8438}
+.mine-stat--machines .mine-stat__ico{background:var(--warn-100);color:#A9701C}
+.mine-stat__ico svg{width:13px;height:13px}
+.mine-stat__val{font-size:14px;font-weight:800;color:var(--heading);line-height:1}
+.mine-stat__lbl{font-size:10.5px;color:var(--muted);letter-spacing:.03em;white-space:nowrap}
 
 /* ---------- 11. Tabs ------------------------------------------------ */
 .tabs{
@@ -729,7 +747,6 @@ table.tbl{width:100%;border-collapse:collapse;min-width:860px}
   .auth__brand{display:none}
   .mine-card{grid-template-columns:80px 1fr;gap:14px}
   .mine-card__logo{height:60px;font-size:14px}
-  .mine-card__right{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between;width:100%}
   .mine-stats{grid-column:1/-1;width:100%}
   .mine-stat{flex:1}
 }
@@ -754,22 +771,38 @@ table.tbl{width:100%;border-collapse:collapse;min-width:860px}
   .page__title{font-size:19px}
   .spec{grid-template-columns:1fr;gap:2px;padding:10px 4px}
   .chart__plot{gap:12px;height:210px}
+  .chart__labels{gap:12px}
+  .bar__label{font-size:9.5px}
+  .fleet-grid{grid-template-columns:1fr}
+  .people-grid{grid-template-columns:1fr}
   .tab-panel{padding:16px}
   .tabs{padding:0 8px}
-  .tabs__action-label{display:none}
-  .tabs__action{width:38px;padding:0}
-  .tabs__action svg{margin:0}
+  /* icon+text "add" buttons collapse to icon-only to save space */
+  .btn-label{display:none}
+  .btn--collapse{width:38px;padding:0}
+  .btn--collapse:has(.count-badge:not([hidden])){width:auto;min-width:38px;padding:0 10px}
+  .page__search{width:170px}
 }
 @media (max-width:560px){
   .mine-card{grid-template-columns:1fr}
   .mine-card__logo{width:80px;height:56px}
   .stat-row{grid-template-columns:1fr 1fr}
   .toolbar__search{max-width:none}
+  .page__search{width:120px}
+  /* keep the stat chips from crowding a narrow card — size to content
+     instead of stretching equally now that the text label is hidden */
+  .mine-stats{justify-content:flex-start}
+  .mine-stat{flex:0 0 auto;padding:4px 9px 4px 4px;gap:6px}
+  .mine-stat__ico{width:22px;height:22px}
+  .mine-stat__lbl{display:none}
+  .chart__plot{gap:4px;padding:0 2px}
+  .chart__labels{gap:4px;padding:0 2px}
+  .bar__label{font-size:8.5px;letter-spacing:.01em}
 }
 
 /* ---------- 18. Filter drawer ---------------------------------------- */
 .drawer{
-  position:fixed;top:0;right:0;bottom:0;width:360px;max-width:92vw;z-index:90;
+  position:fixed;top:0;right:0;bottom:0;height:100dvh;width:360px;max-width:92vw;z-index:90;
   background:var(--surface);
   display:flex;flex-direction:column;
   transform:translateX(100%);visibility:hidden;
@@ -785,9 +818,9 @@ table.tbl{width:100%;border-collapse:collapse;min-width:860px}
   border-bottom:1px solid var(--border-soft);
 }
 .drawer__head h3{font-size:17px}
-.drawer__body{padding:20px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:18px}
+.drawer__body{padding:20px;overflow-y:auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:18px}
 .drawer__foot{
-  padding:16px 20px;border-top:1px solid var(--border-soft);display:flex;gap:10px;
+  padding:16px 20px;border-top:1px solid var(--border-soft);display:flex;gap:10px;flex-shrink:0;
 }
 .drawer__foot .btn{flex:1}
 .drawer-scrim{
@@ -832,10 +865,7 @@ textarea.input{height:auto;min-height:84px;padding:10px 13px;resize:vertical;lin
 }
 
 /* mine logo thumbnails (real images with monogram fallback) */
-.mine-card__logo img,.mine-hero__img img{max-height:100%;width:auto;object-fit:contain}
 .mine-card__logo--img{background:#fff!important;padding:8px}
-.mine-hero__img--photo{background:#fff;padding:0}
-.mine-hero__img--photo img{width:100%;height:100%;object-fit:cover}
 
 @media (max-width:860px){
   .form-grid,.form-grid--3,.form-grid--img{grid-template-columns:1fr}
@@ -946,7 +976,6 @@ textarea.input{height:auto;min-height:84px;padding:10px 13px;resize:vertical;lin
   .info-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:640px){
-  .info-grid{grid-template-columns:1fr}
   .overview{gap:18px}
 }
 

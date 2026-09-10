@@ -65,8 +65,8 @@ function icon(name, cls){
 const SOCIAL_ICONS = {
   linkedin:{ vb:'0 0 24 24', color:'#0A66C2',
     d:'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zM6.994 20.452H3.68V9h3.314v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
-  twitter:{ vb:'0 0 512 512', color:'#1DA1F2',
-    d:'M459.4 151.7c.325 4.548 .325 9.097 .325 13.65 0 138.7-105.6 298.6-298.6 298.6-59.45 0-114.7-17.22-161.1-47.11 8.447 .974 16.57 1.299 25.34 1.299 49.06 0 94.21-16.57 130.3-44.83-46.13-.975-84.79-31.19-98.11-72.77 6.498 .974 12.99 1.624 19.82 1.624 9.421 0 18.84-1.3 27.61-3.573-48.08-9.747-84.14-51.98-84.14-102.1v-1.299c13.97 7.797 30.21 12.67 47.43 13.32-28.26-18.84-46.78-51-46.78-87.39 0-19.49 5.197-37.36 14.29-52.95 51.68 63.67 129.3 105.3 216.4 109.8-1.624-7.797-2.599-15.92-2.599-24.04 0-57.43 46.46-104.2 104.2-104.2 30.21 0 57.43 12.67 76.6 33.14 23.72-4.548 46.46-13.32 66.6-25.34-7.798 24.37-24.37 44.83-46.13 57.75 21.12-2.273 41.58-8.122 60.42-16.24-14.29 20.79-32.16 39.31-52.63 54.25z' },
+  x:{ vb:'0 0 24 24', color:'#000000',
+    d:'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932zM17.61 20.644h2.039L6.486 3.24H4.298z' },
   facebook:{ vb:'0 0 512 512', color:'#1877F2',
     d:'M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z' }
 };
@@ -150,6 +150,12 @@ function initShell(){
   if(bd) bd.addEventListener('click',()=>app.classList.remove('is-open'));
   try{ if(localStorage.getItem('rms.collapsed')==='1' && window.innerWidth>860) app.classList.add('is-collapsed'); }catch(e){}
 
+  // tapping a nav link closes the mobile drawer (matters when it links to
+  // the current page, which doesn't reload and would otherwise leave the
+  // drawer stuck open)
+  document.querySelectorAll('.nav-item').forEach(a=>
+    a.addEventListener('click',()=>{ if(window.innerWidth<=860) app.classList.remove('is-open'); }));
+
   // profile dropdown
   const prof = document.querySelector('.profile');
   if(prof){
@@ -164,8 +170,14 @@ function initShell(){
   document.querySelectorAll('[data-logout]').forEach(b=>
     b.addEventListener('click',()=>{ location.href='index.html'; }));
 
-  // close drawer on resize up
-  window.addEventListener('resize',()=>{ if(window.innerWidth>860) app.classList.remove('is-open'); });
+  // keep drawer/rail state consistent when crossing the mobile breakpoint
+  // (e.g. rotating a tablet, or resizing down after collapsing the desktop
+  // rail — otherwise the mobile drawer can open in the "collapsed" state:
+  // full width, but with all its labels hidden)
+  window.addEventListener('resize',()=>{
+    if(window.innerWidth>860) app.classList.remove('is-open');
+    else app.classList.remove('is-collapsed');
+  });
 }
 
 /* ---- Toast ----------------------------------------------------------- */
